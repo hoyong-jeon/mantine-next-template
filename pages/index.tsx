@@ -2,10 +2,11 @@ import React from 'react';
 import SplitPane, { Pane } from 'split-pane-react';
 import 'split-pane-react/esm/themes/default.css';
 import { createStyles } from '@mantine/core';
+import Image from 'next/image';
 import GridLines from '../components/GridLines';
 import CompositionFooter from '../components/CompositionFooter';
 import MiddleHeader from '../components/MiddleHeader';
-// test
+
 const useStyles = createStyles((theme) => ({
   app: {
     height: '100vh',
@@ -15,8 +16,11 @@ const useStyles = createStyles((theme) => ({
     display: 'flex',
   },
   top: {
+    display: 'flex',
+    alignItems: 'center',
     height: theme.other.topHeight,
-    backgroundColor: theme.colors.teal[6],
+    backgroundColor: theme.colors.teal[8],
+    padding: '0 20px',
   },
   mid: {
     position: 'relative',
@@ -69,7 +73,7 @@ const useStyles = createStyles((theme) => ({
     position: 'absolute',
     top: 0,
     left: 0,
-    width: 62,
+    width: 60,
     height: '100%',
     cursor: 'default',
     zIndex: 2,
@@ -81,7 +85,7 @@ const useStyles = createStyles((theme) => ({
     left: 0,
     width: '100%',
     height: '100%',
-    borderLeft: '62px solid transparent',
+    borderLeft: '60px solid transparent',
     backgroundColor: 'black',
   },
 }));
@@ -97,7 +101,9 @@ export default function HomePage() {
 
   return (
     <div className={classes.app}>
-      <div className={classes.top}>Top</div>
+      <div className={classes.top}>
+        <Image src="/logo.svg" alt="logo" width={106} height={36} />
+      </div>
       <div className={classes.mid}>
         <MiddleHeader scrollLeft={scrollLeft} />
         <div className={classes.compositionArea}>
