@@ -12,32 +12,36 @@ const useStyles = createStyles(() => ({
   },
 }));
 
+const onDraw = (
+  context: CanvasRenderingContext2D,
+  canvas: HTMLCanvasElement,
+  scrollLeft: number
+) => {
+  // Draw grid lines
+  const gap = 40;
+  const numLines = Math.ceil(canvas.clientWidth / gap) + 1;
+
+  for (let i = 0; i < numLines; i += 1) {
+    const x = i * gap - (scrollLeft % gap);
+    context.beginPath();
+    context.moveTo(x, 0);
+    context.lineTo(x, canvas.clientHeight);
+    context.strokeStyle = '#333';
+    context.stroke();
+
+    // Draw number marks
+    const mark = Math.floor((i * gap + scrollLeft) / gap);
+    context.fillStyle = '#fff';
+    context.fillText(mark.toString(), x + 2, 12); // Adjust the position as needed
+  }
+};
+
 interface Props {
   scrollLeft: number;
 }
 
 export default function GridLines({ scrollLeft }: Props) {
   const { classes } = useStyles();
-
-  const onDraw = (context: CanvasRenderingContext2D, canvas: HTMLCanvasElement) => {
-    // Draw grid lines
-    const gap = 40;
-    const numLines = Math.ceil(canvas.clientWidth / gap) + 1;
-
-    for (let i = 0; i < numLines; i += 1) {
-      const x = i * gap - (scrollLeft % gap);
-      context.beginPath();
-      context.moveTo(x, 0);
-      context.lineTo(x, canvas.clientHeight);
-      context.strokeStyle = '#333';
-      context.stroke();
-
-      // Draw number marks
-      const mark = Math.floor((i * gap + scrollLeft) / gap);
-      context.fillStyle = '#fff';
-      context.fillText(mark.toString(), x + 2, 12); // Adjust the position as needed
-    }
-  };
 
   const canvasRef = useCanvas({ scrollLeft, onDraw });
 

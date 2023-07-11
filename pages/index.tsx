@@ -3,6 +3,8 @@ import SplitPane, { Pane } from 'split-pane-react';
 import 'split-pane-react/esm/themes/default.css';
 import { createStyles } from '@mantine/core';
 import Image from 'next/image';
+import Bottom from '@components/Bottom';
+import * as Tone from 'tone';
 import GridLines from '../components/GridLines';
 import CompositionFooter from '../components/CompositionFooter';
 import MiddleHeader from '../components/MiddleHeader';
@@ -10,6 +12,7 @@ import MiddleHeader from '../components/MiddleHeader';
 const useStyles = createStyles((theme) => ({
   app: {
     height: '100vh',
+    overflow: 'hidden',
   },
   pane: {
     height: '100%',
@@ -32,10 +35,6 @@ const useStyles = createStyles((theme) => ({
       theme.other.middleHeaderHeight + theme.other.compositionFooterHeight
     }px)`,
   },
-  bottom: {
-    height: theme.other.bottomHeight,
-    borderTop: `1px solid ${theme.colors.gray[4]}`,
-  },
   side: {
     width: 250,
     height: '100%',
@@ -47,8 +46,6 @@ const useStyles = createStyles((theme) => ({
   },
   lane: {
     position: 'relative',
-    borderTop: '5px solid white',
-    borderBottom: '5px solid white',
     height: '100%',
     flex: 1,
   },
@@ -95,6 +92,33 @@ export default function HomePage() {
   const [sizes, setSizes] = React.useState<(number | string)[]>(['auto']);
   const [scrollLeft, setScrollLeft] = React.useState(0);
 
+  const [isInitialized, setIsInitialized] = React.useState(false);
+  const [isPlaying, setIsPlaying] = React.useState(false);
+  const [isStopped, setIsStopped] = React.useState(false);
+
+  const handleTogglePlay = () => {
+    if (!isInitialized) {
+      setIsInitialized(true);
+      Tone.start();
+    }
+
+    if (!isPlaying) {
+      setIsPlaying(true);
+      Tone.Transport.start();
+    } else {
+      setIsPlaying(false);
+      Tone.Transport.pause();
+    }
+
+    setIsStopped(false);
+  };
+
+  const handleStop = () => {
+    setIsPlaying(false);
+    setIsStopped(true);
+    Tone.Transport.stop();
+  };
+
   const handleScroll = (scrollValue: number) => {
     setScrollLeft(scrollValue);
   };
@@ -105,7 +129,7 @@ export default function HomePage() {
         <Image src="/logo.svg" alt="logo" width={106} height={36} />
       </div>
       <div className={classes.mid}>
-        <MiddleHeader scrollLeft={scrollLeft} />
+        <MiddleHeader scrollLeft={scrollLeft} isPlaying={isPlaying} />
         <div className={classes.compositionArea}>
           <SplitPane
             split="horizontal"
@@ -142,8 +166,12 @@ export default function HomePage() {
         </div>
         <CompositionFooter onScroll={handleScroll} />
       </div>
-
-      <div className={classes.bottom}>Bottom</div>
+      <Bottom
+        isPlaying={isPlaying}
+        isStopped={isStopped}
+        onTogglePlay={handleTogglePlay}
+        onStop={handleStop}
+      />
     </div>
   );
 }

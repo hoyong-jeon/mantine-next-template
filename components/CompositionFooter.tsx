@@ -1,5 +1,6 @@
 import React from 'react';
 import { createStyles } from '@mantine/core';
+import { TOTAL_WIDTH } from '../constants/editor';
 
 const useStyles = createStyles((theme) => ({
   compositionFooter: {
@@ -17,7 +18,7 @@ const useStyles = createStyles((theme) => ({
     overflowX: 'scroll',
 
     div: {
-      width: 6000,
+      width: TOTAL_WIDTH,
       height: 1,
     },
   },

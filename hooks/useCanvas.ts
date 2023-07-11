@@ -2,7 +2,11 @@ import { useEffect, useRef } from 'react';
 
 interface CanvasProps {
   scrollLeft: number;
-  onDraw: (context: CanvasRenderingContext2D, canvas: HTMLCanvasElement) => void;
+  onDraw: (
+    context: CanvasRenderingContext2D,
+    canvas: HTMLCanvasElement,
+    scrollLeft: number
+  ) => void;
 }
 
 export const useCanvas = ({ scrollLeft, onDraw }: CanvasProps) => {
@@ -40,7 +44,7 @@ export const useCanvas = ({ scrollLeft, onDraw }: CanvasProps) => {
         // Clear canvas
         context.clearRect(0, 0, width, height);
 
-        onDraw(context, canvas);
+        onDraw(context, canvas, scrollLeft);
       }
     };
 
