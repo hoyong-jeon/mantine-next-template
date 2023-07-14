@@ -1,10 +1,18 @@
 import React from 'react';
 import SplitPane, { Pane } from 'split-pane-react';
 import 'split-pane-react/esm/themes/default.css';
-import { UnstyledButton, createStyles, useMantineTheme } from '@mantine/core';
+import {
+  UnstyledButton,
+  createStyles,
+  useMantineTheme,
+  ThemeIcon,
+  Select,
+  Slider,
+} from '@mantine/core';
 import Image from 'next/image';
 import Bottom from '@components/Bottom';
 import * as Tone from 'tone';
+import { IconPiano } from '@tabler/icons-react';
 import GridLines from '../components/GridLines';
 import CompositionFooter from '../components/CompositionFooter';
 import MiddleHeader from '../components/MiddleHeader';
@@ -35,11 +43,25 @@ const useStyles = createStyles((theme) => ({
       theme.other.middleHeaderHeight + theme.other.compositionFooterHeight
     }px)`,
   },
+  // side
   side: {
     width: 250,
     height: '100%',
     backgroundColor: 'white',
+    padding: 20,
   },
+  instControls: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+  },
+  instControlRight: {
+    display: 'flex',
+    flexDirection: 'column',
+    gap: 10,
+    width: 144,
+  },
+  // side end
   splitter: {
     height: '100%',
     backgroundColor: theme.colors.gray[4],
@@ -219,7 +241,41 @@ export default function HomePage() {
             onChange={(s) => setSizes(s)}
           >
             <Pane className={classes.pane} style={{ background: '#ddd' }} minSize={100}>
-              <div className={classes.side} />
+              <div className={classes.side}>
+                <div className={classes.instControls}>
+                  <ThemeIcon variant="light" radius="xl" size={50} color="teal">
+                    <IconPiano />
+                  </ThemeIcon>
+                  <div className={classes.instControlRight}>
+                    <Select
+                      placeholder="악기 선택"
+                      data={[
+                        { value: 'react', label: '피아노' },
+                        { value: 'ng', label: '리코더' },
+                        { value: 'svelte', label: '신디사이저' },
+                        { value: 'vue', label: '바이올린' },
+                      ]}
+                      size="xs"
+                      styles={(t) => ({
+                        item: {
+                          // applies styles to selected item
+                          '&[data-selected]': {
+                            '&, &:hover': {
+                              backgroundColor:
+                                t.colorScheme === 'dark' ? t.colors.teal[9] : t.colors.teal[1],
+                              color: t.colorScheme === 'dark' ? t.white : t.colors.teal[9],
+                            },
+                          },
+
+                          // applies styles to hovered item (with mouse or keyboard)
+                          '&[data-hovered]': {},
+                        },
+                      })}
+                    />
+                    <Slider size="xs" color="teal" />
+                  </div>
+                </div>
+              </div>
               <div className={classes.lane}>
                 <div className={classes.scrollable}>
                   <div className={classes.keysAndGrid}>
@@ -245,7 +301,41 @@ export default function HomePage() {
               </div>
             </Pane>
             <Pane className={classes.pane} style={{ background: '#c0c3c6' }} minSize={100}>
-              <div className={classes.side} />
+              <div className={classes.side}>
+                <div className={classes.instControls}>
+                  <ThemeIcon variant="light" radius="xl" size={50} color="cyan">
+                    <IconPiano />
+                  </ThemeIcon>
+                  <div className={classes.instControlRight}>
+                    <Select
+                      placeholder="악기 선택"
+                      data={[
+                        { value: 'react', label: '피아노' },
+                        { value: 'ng', label: '리코더' },
+                        { value: 'svelte', label: '신디사이저' },
+                        { value: 'vue', label: '바이올린' },
+                      ]}
+                      size="xs"
+                      styles={(t) => ({
+                        item: {
+                          // applies styles to selected item
+                          '&[data-selected]': {
+                            '&, &:hover': {
+                              backgroundColor:
+                                t.colorScheme === 'dark' ? t.colors.cyan[9] : t.colors.cyan[1],
+                              color: t.colorScheme === 'dark' ? t.white : t.colors.cyan[9],
+                            },
+                          },
+
+                          // applies styles to hovered item (with mouse or keyboard)
+                          '&[data-hovered]': {},
+                        },
+                      })}
+                    />
+                    <Slider size="xs" color="cyan" />
+                  </div>
+                </div>
+              </div>
               <div className={classes.lane}>
                 <div className={classes.scrollable}>
                   <div className={classes.keysAndGrid}>
