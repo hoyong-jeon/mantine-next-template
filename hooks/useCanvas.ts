@@ -1,16 +1,21 @@
 import { useEffect, useRef } from 'react';
+import { MantineTheme, useMantineTheme } from '@mantine/core';
 
 interface CanvasProps {
   scrollLeft: number;
+  highlightColor: string;
   onDraw: (
     context: CanvasRenderingContext2D,
     canvas: HTMLCanvasElement,
-    scrollLeft: number
+    scrollLeft: number,
+    theme: MantineTheme,
+    highlightColor: string
   ) => void;
 }
 
-export const useCanvas = ({ scrollLeft, onDraw }: CanvasProps) => {
+export const useCanvas = ({ scrollLeft, onDraw, highlightColor }: CanvasProps) => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
+  const theme = useMantineTheme();
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -44,7 +49,7 @@ export const useCanvas = ({ scrollLeft, onDraw }: CanvasProps) => {
         // Clear canvas
         context.clearRect(0, 0, width, height);
 
-        onDraw(context, canvas, scrollLeft);
+        onDraw(context, canvas, scrollLeft, theme, highlightColor);
       }
     };
 

@@ -4,17 +4,15 @@ import { TOTAL_WIDTH } from '../constants/editor';
 
 const useStyles = createStyles((theme) => ({
   compositionFooter: {
-    position: 'relative',
-    left: 250,
-    bottom: 0,
-    width: 'calc(100% - 250px)',
+    width: '100%',
     height: theme.other.compositionFooterHeight,
-    backgroundColor: 'green',
-    paddingLeft: 62,
+    backgroundColor: 'white',
+    paddingLeft: 310,
+    borderTop: `1px solid ${theme.colors.gray[2]}`,
   },
   positionScrollBar: {
     height: 24,
-    backgroundColor: theme.colors.gray[1],
+    backgroundColor: 'white',
     overflowX: 'scroll',
 
     div: {
@@ -25,10 +23,11 @@ const useStyles = createStyles((theme) => ({
 }));
 
 interface Props {
+  scrollLeft: number;
   onScroll: (scrollLeft: number) => void;
 }
 
-export default function CompositionFooter({ onScroll }: Props) {
+export default function CompositionFooter({ scrollLeft, onScroll }: Props) {
   const { classes } = useStyles();
   const scrollBarRef = React.useRef<HTMLDivElement | null>(null);
 
@@ -47,6 +46,14 @@ export default function CompositionFooter({ onScroll }: Props) {
       scrollBar?.removeEventListener('scroll', handleScroll);
     };
   });
+
+  React.useEffect(() => {
+    const scrollBar = scrollBarRef.current;
+
+    if (scrollBar) {
+      scrollBar.scrollLeft = scrollLeft;
+    }
+  }, [scrollLeft]);
 
   return (
     <div className={classes.compositionFooter}>

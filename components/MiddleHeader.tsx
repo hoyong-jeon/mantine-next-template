@@ -88,17 +88,19 @@ const useStyles = createStyles((theme) => ({
   playheadBody: {
     position: 'absolute',
     top: 0,
+    left: -0.5,
     width: 1,
     height: '100%',
-    backgroundColor: theme.colors.teal[6],
+    backgroundColor: theme.colors.teal[8],
   },
   playheadHead: {
     position: 'absolute',
     top: 0,
-    left: -7,
+    left: -7.5,
     width: 15,
     height: 20,
-    backgroundColor: theme.colors.teal[6],
+    backgroundColor: theme.colors.teal[8],
+    clipPath: 'polygon(50% 100%, 100% 50%, 100% 0, 0 0, 0 50%)',
   },
 }));
 
@@ -140,9 +142,16 @@ const onDraw = (
 interface Props {
   scrollLeft: number;
   isPlaying: boolean;
+  onClickEqualizer: () => void;
+  onScrollLeft: (scrollLeft: number) => void;
 }
 
-export default function MiddleHeader({ scrollLeft, isPlaying }: Props) {
+export default function MiddleHeader({
+  scrollLeft,
+  isPlaying,
+  onClickEqualizer,
+  onScrollLeft,
+}: Props) {
   const { classes } = useStyles();
   const canvasRef = useCanvas({ scrollLeft, onDraw });
 
@@ -164,6 +173,10 @@ export default function MiddleHeader({ scrollLeft, isPlaying }: Props) {
     } else {
       playhead.style.display = 'block';
       playhead.style.transform = `translateX(${relativePosition}px)`;
+
+      if (relativePosition > beatRuler.clientWidth - 50) {
+        onScrollLeft(scrollLeft + (beatRuler.clientWidth - 100));
+      }
     }
   }, [scrollLeft]);
 
@@ -225,7 +238,7 @@ export default function MiddleHeader({ scrollLeft, isPlaying }: Props) {
       </div>
       <div className={classes.compositionHeader}>
         <div className={classes.equalizerWrapper}>
-          <ActionIcon>
+          <ActionIcon onClick={onClickEqualizer}>
             <IconEqual />
           </ActionIcon>
         </div>
