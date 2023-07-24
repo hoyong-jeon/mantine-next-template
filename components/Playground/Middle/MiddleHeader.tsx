@@ -5,7 +5,7 @@ import { createStyles, Button, ActionIcon } from '@mantine/core';
 import { useCanvas } from '@hooks/useCanvas';
 import { IconEqual } from '@tabler/icons-react';
 import * as Tone from 'tone';
-import { TOTAL_TIME, TOTAL_WIDTH, STEP_WIDTH, TIME_PER_STEP } from '../constants/editor';
+import { TOTAL_TIME, TOTAL_WIDTH, STEP_WIDTH, TIME_PER_STEP } from '../../../constants/editor';
 
 const useStyles = createStyles((theme) => ({
   middleHeader: {
