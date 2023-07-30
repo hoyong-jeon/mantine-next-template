@@ -1,17 +1,13 @@
 import React from 'react';
-import {
-  createStyles,
-  Select,
-  Slider,
-  ThemeIcon,
-  UnstyledButton,
-  useMantineTheme,
-} from '@mantine/core';
+import { createStyles, Select, Slider, ThemeIcon, useMantineTheme } from '@mantine/core';
 import SplitPane, { Pane } from 'split-pane-react';
 import { IconPiano } from '@tabler/icons-react';
+import { useRecoilState } from 'recoil';
+import { scrollLeftState } from '@atoms/scroll';
+import usePiano from '@hooks/usePiano';
 import MiddleHeader from './MiddleHeader';
 import CompositionFooter from './CompositionFooter';
-import GridLines from './GridLines';
+import Lane from './Lane';
 
 const useStyles = createStyles((theme) => ({
   mid: {
@@ -137,42 +133,17 @@ const useStyles = createStyles((theme) => ({
   },
 }));
 
-// c major scale 3 octaves
-const KEY_MAP = {
-  1: '도',
-  2: '레',
-  3: '미',
-  4: '파',
-  5: '솔',
-  6: '라',
-  7: '시',
-  8: '도',
-  9: '레',
-  10: '미',
-  11: '파',
-  12: '솔',
-  13: '라',
-  14: '시',
-  15: '도',
-  16: '레',
-  17: '미',
-  18: '파',
-  19: '솔',
-  20: '라',
-  21: '시',
-  22: '도',
-};
-
 interface Props {
   isPlaying: boolean;
 }
 
 export default function Middle({ isPlaying }: Props) {
-  const { classes, cx } = useStyles();
+  const { classes } = useStyles();
   const theme = useMantineTheme();
+  const piano = usePiano();
 
   const [sizes, setSizes] = React.useState<(number | string)[]>(['50%', '50%']);
-  const [scrollLeft, setScrollLeft] = React.useState(0);
+  const [scrollLeft, setScrollLeft] = useRecoilState(scrollLeftState);
 
   const handleScroll = (scrollValue: number) => {
     setScrollLeft(scrollValue);
@@ -234,7 +205,8 @@ export default function Middle({ isPlaying }: Props) {
                 </div>
               </div>
             </div>
-            <div className={classes.lane}>
+            <Lane highlightColor={theme.colors.teal[3]} instruments={piano} />
+            {/* <div className={classes.lane}>
               <div className={classes.scrollable}>
                 <div className={classes.keysAndGrid}>
                   <div className={classes.keysWrapper}>
@@ -256,7 +228,7 @@ export default function Middle({ isPlaying }: Props) {
                   </div>
                 </div>
               </div>
-            </div>
+            </div> */}
           </Pane>
           <Pane className={classes.pane} style={{ background: '#c0c3c6' }} minSize={100}>
             <div className={classes.side}>
@@ -294,7 +266,8 @@ export default function Middle({ isPlaying }: Props) {
                 </div>
               </div>
             </div>
-            <div className={classes.lane}>
+            <Lane highlightColor={theme.colors.cyan[3]} instruments={[]} />
+            {/* <div className={classes.lane}>
               <div className={classes.scrollable}>
                 <div className={classes.keysAndGrid}>
                   <div className={classes.keysWrapper}>
@@ -316,7 +289,7 @@ export default function Middle({ isPlaying }: Props) {
                   </div>
                 </div>
               </div>
-            </div>
+            </div> */}
           </Pane>
         </SplitPane>
       </div>

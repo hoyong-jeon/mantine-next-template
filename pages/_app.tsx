@@ -4,6 +4,7 @@ import { getCookie, setCookie } from 'cookies-next';
 import Head from 'next/head';
 import { MantineProvider, ColorScheme, ColorSchemeProvider } from '@mantine/core';
 import { Notifications } from '@mantine/notifications';
+import { RecoilRoot } from 'recoil';
 
 export default function App(props: AppProps & { colorScheme: ColorScheme }) {
   const { Component, pageProps } = props;
@@ -22,30 +23,31 @@ export default function App(props: AppProps & { colorScheme: ColorScheme }) {
         <meta name="viewport" content="minimum-scale=1, initial-scale=1, width=device-width" />
         <link rel="shortcut icon" href="/favicon.svg" />
       </Head>
-
-      <ColorSchemeProvider colorScheme={colorScheme} toggleColorScheme={toggleColorScheme}>
-        <MantineProvider
-          withGlobalStyles
-          withNormalizeCSS
-          theme={{
-            globalStyles: () => ({
-              body: {
-                overscrollBehaviorX: 'none',
+      <RecoilRoot>
+        <ColorSchemeProvider colorScheme={colorScheme} toggleColorScheme={toggleColorScheme}>
+          <MantineProvider
+            withGlobalStyles
+            withNormalizeCSS
+            theme={{
+              globalStyles: () => ({
+                body: {
+                  overscrollBehaviorX: 'none',
+                },
+              }),
+              other: {
+                topHeight: 60,
+                bottomHeight: 60,
+                positionScrollBarHeight: 24,
+                compositionFooterHeight: 35,
+                middleHeaderHeight: 40,
               },
-            }),
-            other: {
-              topHeight: 60,
-              bottomHeight: 60,
-              positionScrollBarHeight: 24,
-              compositionFooterHeight: 35,
-              middleHeaderHeight: 40,
-            },
-          }}
-        >
-          <Component {...pageProps} />
-          <Notifications />
-        </MantineProvider>
-      </ColorSchemeProvider>
+            }}
+          >
+            <Component {...pageProps} />
+            <Notifications />
+          </MantineProvider>
+        </ColorSchemeProvider>
+      </RecoilRoot>
     </>
   );
 }

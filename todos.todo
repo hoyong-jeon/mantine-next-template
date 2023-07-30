@@ -1,2 +1,2 @@
-- bottomBar buttons, transport sync
-- playhead
+- abstract lane component
+- refactor useCanvas
