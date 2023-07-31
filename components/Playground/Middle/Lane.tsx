@@ -6,7 +6,8 @@ import GridLines from './GridLines';
 
 interface Instrument {
   name: string;
-  instrument: unknown;
+  player: unknown;
+  playFn: () => void;
 }
 
 interface Props {
@@ -106,7 +107,11 @@ export default function Lane({ instruments, highlightColor }: Props) {
           <div className={classes.keysWrapper}>
             <div className={classes.keys}>
               {instruments.map((instrument) => (
-                <UnstyledButton key={instrument.name} className={classes.key}>
+                <UnstyledButton
+                  key={instrument.name}
+                  className={classes.key}
+                  onClick={instrument.playFn}
+                >
                   {instrument.name}
                 </UnstyledButton>
               ))}

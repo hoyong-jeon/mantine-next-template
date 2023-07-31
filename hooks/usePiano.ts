@@ -4,7 +4,8 @@ import { Synth } from 'tone';
 
 interface PianoRoll {
   name: string;
-  instrument: Synth;
+  player: Synth;
+  playFn: () => void;
 }
 
 export default function usePiano(
@@ -13,6 +14,7 @@ export default function usePiano(
   octaveRange: number[] = [3, 5]
 ) {
   const pianoRef = React.useRef<PianoRoll[]>([]);
+  const [isPianoReady, setIsPianoReady] = React.useState(false);
 
   React.useEffect(() => {
     const notes = [];
@@ -23,15 +25,27 @@ export default function usePiano(
       notes.push(...baseNotes.map((note) => `${note}${octaveRange[0] + i}`));
     }
 
+    notes.push(baseNotes[0] + (octaveRange[1] + 1));
+
     pianoRef.current = notes.map((note) => ({
       name: note,
-      instrument: new Synth().toDestination(),
+      player: new Synth().toDestination(),
+      playFn: () => {
+        const target = pianoRef.current.find(({ name }) => name === note);
+        if (target) target.player.triggerAttackRelease(note, '8n');
+      },
     }));
 
     return () => {
-      pianoRef.current.forEach(({ instrument }) => instrument.dispose());
+      pianoRef.current.forEach(({ player }) => player.dispose());
     };
   }, [tonic, scale, octaveRange]);
 
-  return pianoRef.current;
+  React.useEffect(() => {
+    if (pianoRef.current.length > 0) {
+      setIsPianoReady(true);
+    }
+  }, [pianoRef.current]);
+
+  return { piano: pianoRef.current, isPianoReady };
 }

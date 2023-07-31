@@ -140,7 +140,7 @@ interface Props {
 export default function Middle({ isPlaying }: Props) {
   const { classes } = useStyles();
   const theme = useMantineTheme();
-  const piano = usePiano();
+  const { piano, isPianoReady } = usePiano();
 
   const [sizes, setSizes] = React.useState<(number | string)[]>(['50%', '50%']);
   const [scrollLeft, setScrollLeft] = useRecoilState(scrollLeftState);
@@ -205,7 +205,7 @@ export default function Middle({ isPlaying }: Props) {
                 </div>
               </div>
             </div>
-            <Lane highlightColor={theme.colors.teal[3]} instruments={piano} />
+            {isPianoReady && <Lane highlightColor={theme.colors.teal[3]} instruments={piano} />}
             {/* <div className={classes.lane}>
               <div className={classes.scrollable}>
                 <div className={classes.keysAndGrid}>
