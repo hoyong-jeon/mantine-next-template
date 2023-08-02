@@ -2,7 +2,7 @@
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 import React from 'react';
 import { createStyles, Button, ActionIcon } from '@mantine/core';
-import { useCanvas } from '@hooks/useCanvas';
+import useScrollXReactiveCanvas from '@hooks/useScrollXReactiveCanvas';
 import { IconEqual } from '@tabler/icons-react';
 import * as Tone from 'tone';
 import { TOTAL_TIME, TOTAL_WIDTH, STEP_WIDTH, TIME_PER_STEP } from '../../../constants/editor';
@@ -104,59 +104,52 @@ const useStyles = createStyles((theme) => ({
   },
 }));
 
-const onDraw = (
-  context: CanvasRenderingContext2D,
-  canvas: HTMLCanvasElement,
-  scrollLeft: number
-) => {
-  // Draw grid lines
-  const gap = 20;
-  const numLines = Math.ceil(canvas.clientWidth / gap) + 1;
-
-  for (let i = 0; i < numLines; i += 1) {
-    const x = i * gap - (scrollLeft % gap);
-    context.beginPath();
-
-    // Draw number marks
-    const mark = Math.floor((i * gap + scrollLeft) / gap);
-
-    if (mark % 4 === 0) {
-      context.moveTo(x, 0);
-      context.lineTo(x, canvas.clientHeight);
-      context.strokeStyle = '#fff';
-      context.stroke();
-
-      const step = mark;
-      context.fillStyle = '#fff';
-      context.font = 'bold 12px sans-serif';
-      context.fillText(step.toString(), x + 4, 12); // Adjust the position as needed
-    } else {
-      context.moveTo(x, canvas.clientHeight);
-      context.lineTo(x, canvas.clientHeight / 2);
-      context.strokeStyle = '#fff';
-      context.stroke();
-    }
-  }
-};
-
 interface Props {
-  scrollLeft: number;
+  scrollX: number;
   isPlaying: boolean;
   onClickEqualizer: () => void;
-  onScrollLeft: (scrollLeft: number) => void;
+  onScrollX: (scrollX: number) => void;
 }
 
-export default function MiddleHeader({
-  scrollLeft,
-  isPlaying,
-  onClickEqualizer,
-  onScrollLeft,
-}: Props) {
+export default function MiddleHeader({ scrollX, isPlaying, onClickEqualizer, onScrollX }: Props) {
   const { classes } = useStyles();
-  const canvasRef = useCanvas({ scrollLeft, onDraw });
 
   const beatRulerRef = React.useRef<HTMLDivElement>(null);
   const playheadRef = React.useRef<HTMLDivElement>(null);
+
+  const onDraw = React.useCallback(
+    (context: CanvasRenderingContext2D, canvas: HTMLCanvasElement) => {
+      // Draw grid lines
+      const gap = 20;
+      const numLines = Math.ceil(canvas.clientWidth / gap) + 1;
+
+      for (let i = 0; i < numLines; i += 1) {
+        const x = i * gap - (scrollX % gap);
+        context.beginPath();
+
+        // Draw number marks
+        const mark = Math.floor((i * gap + scrollX) / gap);
+
+        if (mark % 4 === 0) {
+          context.moveTo(x, 0);
+          context.lineTo(x, canvas.clientHeight);
+          context.strokeStyle = '#fff';
+          context.stroke();
+
+          const step = mark;
+          context.fillStyle = '#fff';
+          context.font = 'bold 12px sans-serif';
+          context.fillText(step.toString(), x + 4, 12); // Adjust the position as needed
+        } else {
+          context.moveTo(x, canvas.clientHeight);
+          context.lineTo(x, canvas.clientHeight / 2);
+          context.strokeStyle = '#fff';
+          context.stroke();
+        }
+      }
+    },
+    [scrollX]
+  );
 
   const updatePlayhead = React.useCallback(() => {
     const playhead = playheadRef.current;
@@ -167,18 +160,19 @@ export default function MiddleHeader({
     const totalTime = TOTAL_TIME;
     const absolutePosition = (currentTime / totalTime) * TOTAL_WIDTH;
 
-    const relativePosition = absolutePosition - scrollLeft;
+    const relativePosition = absolutePosition - scrollX;
     if (relativePosition < 0 || relativePosition > beatRuler.clientWidth) {
       playhead.style.display = 'none';
     } else {
       playhead.style.display = 'block';
       playhead.style.transform = `translateX(${relativePosition}px)`;
 
-      if (relativePosition > beatRuler.clientWidth - 50) {
-        onScrollLeft(scrollLeft + (beatRuler.clientWidth - 100));
+      // Scroll to playhead if it's near the edge, only if playing
+      if (relativePosition > beatRuler.clientWidth - 50 && isPlaying) {
+        onScrollX(scrollX + (beatRuler.clientWidth - 100));
       }
     }
-  }, [scrollLeft]);
+  }, [scrollX]);
 
   const goToTime = (timelinePosition: number) => {
     const time = timelinePosition * TIME_PER_STEP;
@@ -194,7 +188,7 @@ export default function MiddleHeader({
       // mouse offset x from ruler
       const offsetX = event.clientX - beatRuler.getBoundingClientRect().left;
       // absolute position of mouse click
-      const absolutePosition = offsetX + scrollLeft;
+      const absolutePosition = offsetX + scrollX;
       // get timeline position based on resolution of STEP_WIDTH
       const timelinePosition = Math.floor(absolutePosition / STEP_WIDTH);
       // get time based on timeline position
@@ -202,7 +196,7 @@ export default function MiddleHeader({
       // go to time
       goToTime(timelinePosition);
     },
-    [scrollLeft]
+    [scrollX]
   );
 
   React.useEffect(() => {
@@ -220,7 +214,9 @@ export default function MiddleHeader({
     }
 
     return () => window.cancelAnimationFrame(animationFrameId);
-  }, [isPlaying, scrollLeft]);
+  }, [scrollX, isPlaying]);
+
+  const canvasRef = useScrollXReactiveCanvas(onDraw);
 
   return (
     <div className={classes.middleHeader}>

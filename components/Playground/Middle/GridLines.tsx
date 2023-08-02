@@ -1,6 +1,6 @@
 import React from 'react';
-import { createStyles, MantineTheme } from '@mantine/core';
-import { useCanvas } from '@hooks/useCanvas';
+import { createStyles, useMantineTheme } from '@mantine/core';
+import useScrollXReactiveCanvas from '@hooks/useScrollXReactiveCanvas';
 
 const useStyles = createStyles(() => ({
   canvas: {
@@ -14,58 +14,55 @@ const useStyles = createStyles(() => ({
   },
 }));
 
-const onDraw = (
-  context: CanvasRenderingContext2D,
-  canvas: HTMLCanvasElement,
-  scrollLeft: number,
-  theme: MantineTheme,
-  highlightColor: string
-) => {
-  // Draw horizontal lanes
-  // each lane is 30px tall
-  // colors should be black and white alternating
-  // the number of lanes is 7 * 3 + 1 = 22
-  const numLanes = 22;
-  const laneHeight = 30;
-  const laneWidth = canvas.clientWidth;
-  const laneColors = [theme.colors.gray[3], theme.colors.gray[4]];
-  const hightlightColor = highlightColor;
-
-  for (let i = 0; i < numLanes; i += 1) {
-    const y = i * laneHeight;
-    const color = i % 7 === 0 ? hightlightColor : laneColors[i % 2];
-    context.fillStyle = color;
-    context.fillRect(0, y, laneWidth, laneHeight);
-  }
-
-  // Draw grid lines
-  const gap = 20;
-  const numLines = Math.ceil(canvas.clientWidth / gap) + 1;
-
-  for (let i = 0; i < numLines; i += 1) {
-    const x = i * gap - (scrollLeft % gap);
-    context.beginPath();
-    context.moveTo(x, 0);
-    context.lineTo(x, canvas.clientHeight);
-    context.strokeStyle = theme.colors.gray['0'];
-    context.stroke();
-
-    // Draw number marks
-    // const mark = Math.floor((i * gap + scrollLeft) / gap);
-    // context.fillStyle = '#fff';
-    // context.fillText(mark.toString(), x + 2, 12);
-  }
-};
-
 interface Props {
-  scrollLeft: number;
   highlightColor: string;
 }
 
-export default function GridLines({ scrollLeft, highlightColor }: Props) {
+export default function GridLines({ highlightColor }: Props) {
   const { classes } = useStyles();
 
-  const canvasRef = useCanvas({ scrollLeft, onDraw, highlightColor });
+  const theme = useMantineTheme();
+
+  const onDraw = React.useCallback(
+    (context: CanvasRenderingContext2D, canvas: HTMLCanvasElement, scrollX: number) => {
+      // Draw horizontal lanes
+      // each lane is 30px tall
+      // colors should be black and white alternating
+      // the number of lanes is 7 * 3 + 1 = 22
+      const numLanes = 22;
+      const laneHeight = 30;
+      const laneWidth = canvas.clientWidth;
+      const laneColors = [theme.colors.gray[3], theme.colors.gray[4]];
+
+      for (let i = 0; i < numLanes; i += 1) {
+        const y = i * laneHeight;
+        const color = i % 7 === 0 ? highlightColor : laneColors[i % 2];
+        context.fillStyle = color;
+        context.fillRect(0, y, laneWidth, laneHeight);
+      }
+
+      // Draw grid lines
+      const gap = 20;
+      const numLines = Math.ceil(canvas.clientWidth / gap) + 1;
+
+      for (let i = 0; i < numLines; i += 1) {
+        const x = i * gap - (scrollX % gap);
+        context.beginPath();
+        context.moveTo(x, 0);
+        context.lineTo(x, canvas.clientHeight);
+        context.strokeStyle = theme.colors.gray['0'];
+        context.stroke();
+
+        // Draw number marks
+        // const mark = Math.floor((i * gap + scrollLeft) / gap);
+        // context.fillStyle = '#fff';
+        // context.fillText(mark.toString(), x + 2, 12);
+      }
+    },
+    [highlightColor]
+  );
+
+  const canvasRef = useScrollXReactiveCanvas(onDraw);
 
   return <canvas className={classes.canvas} ref={canvasRef} />;
 }

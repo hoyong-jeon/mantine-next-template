@@ -2,9 +2,9 @@ import React from 'react';
 import { createStyles, Select, Slider, ThemeIcon, useMantineTheme } from '@mantine/core';
 import SplitPane, { Pane } from 'split-pane-react';
 import { IconPiano } from '@tabler/icons-react';
-import { useRecoilState } from 'recoil';
-import { scrollLeftState } from '@atoms/scroll';
 import usePiano from '@hooks/usePiano';
+import { useRecoilState } from 'recoil';
+import { scrollXState } from '@atoms/scroll';
 import MiddleHeader from './MiddleHeader';
 import CompositionFooter from './CompositionFooter';
 import Lane from './Lane';
@@ -143,10 +143,10 @@ export default function Middle({ isPlaying }: Props) {
   const { piano, isPianoReady } = usePiano();
 
   const [sizes, setSizes] = React.useState<(number | string)[]>(['50%', '50%']);
-  const [scrollLeft, setScrollLeft] = useRecoilState(scrollLeftState);
+  const [scrollX, setScrollX] = useRecoilState(scrollXState);
 
-  const handleScroll = (scrollValue: number) => {
-    setScrollLeft(scrollValue);
+  const handleScrollX = (scrollValue: number) => {
+    setScrollX(scrollValue);
   };
 
   const handleEqualizePane = () => {
@@ -156,10 +156,10 @@ export default function Middle({ isPlaying }: Props) {
   return (
     <div className={classes.mid}>
       <MiddleHeader
-        scrollLeft={scrollLeft}
+        scrollX={scrollX}
         isPlaying={isPlaying}
         onClickEqualizer={handleEqualizePane}
-        onScrollLeft={handleScroll}
+        onScrollX={handleScrollX}
       />
       <div className={classes.compositionArea}>
         <SplitPane
@@ -206,29 +206,6 @@ export default function Middle({ isPlaying }: Props) {
               </div>
             </div>
             {isPianoReady && <Lane highlightColor={theme.colors.teal[3]} instruments={piano} />}
-            {/* <div className={classes.lane}>
-              <div className={classes.scrollable}>
-                <div className={classes.keysAndGrid}>
-                  <div className={classes.keysWrapper}>
-                    <div className={classes.keys}>
-                      {Object.entries(KEY_MAP)
-                        .reverse()
-                        .map(([keyCode, key]) => (
-                          <UnstyledButton
-                            key={keyCode}
-                            className={cx(classes.key, classes.keyHighlightTeal)}
-                          >
-                            {key}
-                          </UnstyledButton>
-                        ))}
-                    </div>
-                  </div>
-                  <div className={classes.grid}>
-                    <GridLines scrollLeft={scrollLeft} highlightColor={theme.colors.teal[3]} />
-                  </div>
-                </div>
-              </div>
-            </div> */}
           </Pane>
           <Pane className={classes.pane} style={{ background: '#c0c3c6' }} minSize={100}>
             <div className={classes.side}>
@@ -267,33 +244,10 @@ export default function Middle({ isPlaying }: Props) {
               </div>
             </div>
             <Lane highlightColor={theme.colors.cyan[3]} instruments={[]} />
-            {/* <div className={classes.lane}>
-              <div className={classes.scrollable}>
-                <div className={classes.keysAndGrid}>
-                  <div className={classes.keysWrapper}>
-                    <div className={classes.keys}>
-                      {Object.entries(KEY_MAP)
-                        .reverse()
-                        .map(([keyCode, key]) => (
-                          <UnstyledButton
-                            key={keyCode}
-                            className={cx(classes.key, classes.keyHighlightCyan)}
-                          >
-                            {key}
-                          </UnstyledButton>
-                        ))}
-                    </div>
-                  </div>
-                  <div className={classes.grid}>
-                    <GridLines scrollLeft={scrollLeft} highlightColor={theme.colors.cyan[3]} />
-                  </div>
-                </div>
-              </div>
-            </div> */}
           </Pane>
         </SplitPane>
       </div>
-      <CompositionFooter scrollLeft={scrollLeft} onScroll={handleScroll} />
+      <CompositionFooter scrollX={scrollX} onScrollX={handleScrollX} />
     </div>
   );
 }

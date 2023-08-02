@@ -1,7 +1,5 @@
 import React from 'react';
 import { createStyles, UnstyledButton, useMantineTheme } from '@mantine/core';
-import { useRecoilValue } from 'recoil';
-import { scrollLeftState } from '@atoms/scroll';
 import GridLines from './GridLines';
 
 interface Instrument {
@@ -98,7 +96,6 @@ const useStyles = createStyles((theme, { highlightColor }: StylesProps) => ({
 export default function Lane({ instruments, highlightColor }: Props) {
   const { classes } = useStyles({ highlightColor });
   const theme = useMantineTheme();
-  const scrollLeft = useRecoilValue(scrollLeftState);
 
   return (
     <div className={classes.lane}>
@@ -118,7 +115,7 @@ export default function Lane({ instruments, highlightColor }: Props) {
             </div>
           </div>
           <div className={classes.grid}>
-            <GridLines scrollLeft={scrollLeft} highlightColor={theme.colors.teal[3]} />
+            <GridLines highlightColor={theme.colors.teal[3]} />
           </div>
         </div>
       </div>

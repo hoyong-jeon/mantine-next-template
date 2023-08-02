@@ -1,6 +1,6 @@
 import { atom } from 'recoil';
 
-export const scrollLeftState = atom({
-  key: 'scrollLeftState',
+export const scrollXState = atom({
+  key: 'scrollXState',
   default: 0,
 });

@@ -1,6 +1,8 @@
 import React from 'react';
 import { createStyles } from '@mantine/core';
+import { useRecoilState } from 'recoil';
 import * as Tone from 'tone';
+import { timeState } from '@atoms/time';
 
 const useStyles = createStyles(() => ({
   timer: {
@@ -16,7 +18,7 @@ interface Props {
 export default function Timer({ isPlaying, isStopped }: Props) {
   const { classes } = useStyles();
 
-  const [timer, setTimer] = React.useState('0');
+  const [timer, setTimer] = useRecoilState(timeState);
 
   React.useEffect(() => {
     let frameId: number;

@@ -23,37 +23,37 @@ const useStyles = createStyles((theme) => ({
 }));
 
 interface Props {
-  scrollLeft: number;
-  onScroll: (scrollLeft: number) => void;
+  scrollX: number;
+  onScrollX: (scrollX: number) => void;
 }
 
-export default function CompositionFooter({ scrollLeft, onScroll }: Props) {
+export default function CompositionFooter({ scrollX, onScrollX }: Props) {
   const { classes } = useStyles();
   const scrollBarRef = React.useRef<HTMLDivElement | null>(null);
 
   React.useEffect(() => {
     const scrollBar = scrollBarRef.current;
+    if (!scrollBar) return;
 
     const handleScroll = () => {
       if (scrollBar) {
-        onScroll(scrollBar.scrollLeft);
+        onScrollX(scrollBar.scrollLeft);
       }
     };
 
-    scrollBar?.addEventListener('scroll', handleScroll);
+    scrollBar.addEventListener('scroll', handleScroll);
 
-    return () => {
-      scrollBar?.removeEventListener('scroll', handleScroll);
-    };
-  });
+    // eslint-disable-next-line consistent-return
+    return () => scrollBar.removeEventListener('scroll', handleScroll);
+  }, [onScrollX]);
 
   React.useEffect(() => {
     const scrollBar = scrollBarRef.current;
 
     if (scrollBar) {
-      scrollBar.scrollLeft = scrollLeft;
+      scrollBar.scrollLeft = scrollX;
     }
-  }, [scrollLeft]);
+  }, [scrollX]);
 
   return (
     <div className={classes.compositionFooter}>
