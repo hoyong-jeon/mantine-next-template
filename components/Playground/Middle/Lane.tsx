@@ -1,5 +1,5 @@
 import React from 'react';
-import { createStyles, UnstyledButton, useMantineTheme } from '@mantine/core';
+import { createStyles, UnstyledButton } from '@mantine/core';
 import GridLines from './GridLines';
 
 interface Instrument {
@@ -9,13 +9,18 @@ interface Instrument {
 }
 
 interface Props {
+  type: 'melody' | 'drums';
   instruments: Instrument[];
-  highlightColor?: string;
+  highlightColor: string;
 }
 
-type StylesProps = Pick<Props, 'highlightColor'>;
+interface StylesProps {
+  highlightColor: string;
+  numUnits: number;
+  unitHeight: number;
+}
 
-const useStyles = createStyles((theme, { highlightColor }: StylesProps) => ({
+const useStyles = createStyles((theme, { highlightColor, numUnits, unitHeight }: StylesProps) => ({
   lane: {
     position: 'relative',
     height: '100%',
@@ -36,7 +41,7 @@ const useStyles = createStyles((theme, { highlightColor }: StylesProps) => ({
     top: 0,
     left: 0,
     width: '100%',
-    height: 800,
+    height: 140 + 30 * instruments.length,
     backgroundColor: theme.colors.gray[0],
   },
   keysWrapper: {
@@ -93,9 +98,22 @@ const useStyles = createStyles((theme, { highlightColor }: StylesProps) => ({
   },
 }));
 
-export default function Lane({ instruments, highlightColor }: Props) {
-  const { classes } = useStyles({ highlightColor });
-  const theme = useMantineTheme();
+const UNIT_COLOR_TABLE = {
+  melody: theme.colors.gray[4],
+  drums: theme.colors.gray[5],
+};
+
+const UNIT_HEIGHT_TABLE = {
+  melody: 30,
+  drums: 50,
+};
+
+export default function Lane({ type, instruments, highlightColor }: Props) {
+  const { classes } = useStyles({
+    highlightColor,
+    numUnits: instruments.length,
+    unitHeight: UNIT_HEIGHT_TABLE[type],
+  });
 
   return (
     <div className={classes.lane}>
@@ -115,7 +133,7 @@ export default function Lane({ instruments, highlightColor }: Props) {
             </div>
           </div>
           <div className={classes.grid}>
-            <GridLines highlightColor={theme.colors.teal[3]} />
+            <GridLines highlightColor={highlightColor} />
           </div>
         </div>
       </div>

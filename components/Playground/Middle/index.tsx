@@ -205,7 +205,9 @@ export default function Middle({ isPlaying }: Props) {
                 </div>
               </div>
             </div>
-            {isPianoReady && <Lane highlightColor={theme.colors.teal[3]} instruments={piano} />}
+            {isPianoReady && (
+              <Lane highlightColor={theme.colors.teal[3]} instruments={piano} type="melody" />
+            )}
           </Pane>
           <Pane className={classes.pane} style={{ background: '#c0c3c6' }} minSize={100}>
             <div className={classes.side}>
@@ -243,7 +245,7 @@ export default function Middle({ isPlaying }: Props) {
                 </div>
               </div>
             </div>
-            <Lane highlightColor={theme.colors.cyan[3]} instruments={[]} />
+            <Lane highlightColor={theme.colors.cyan[3]} instruments={[]} type="drums" />
           </Pane>
         </SplitPane>
       </div>
