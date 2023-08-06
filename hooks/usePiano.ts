@@ -1,12 +1,9 @@
 import React from 'react';
 import * as Scale from 'tonal-scale';
 import { Synth } from 'tone';
+import type { Instrument } from '~types/instrument';
 
-interface PianoRoll {
-  name: string;
-  player: Synth;
-  playFn: () => void;
-}
+type PianoRoll = Instrument<Synth>;
 
 export default function usePiano(
   tonic: string = 'C',

@@ -15,30 +15,34 @@ const useStyles = createStyles(() => ({
 }));
 
 interface Props {
-  highlightColor: string;
+  numUnits: number;
+  unitHeight: number;
+  highlightColor?: string;
 }
 
-export default function GridLines({ highlightColor }: Props) {
+export default function GridLines({ numUnits, unitHeight, highlightColor }: Props) {
   const { classes } = useStyles();
 
   const theme = useMantineTheme();
 
   const onDraw = React.useCallback(
     (context: CanvasRenderingContext2D, canvas: HTMLCanvasElement, scrollX: number) => {
-      // Draw horizontal lanes
-      // each lane is 30px tall
-      // colors should be black and white alternating
-      // the number of lanes is 7 * 3 + 1 = 22
-      const numLanes = 22;
-      const laneHeight = 30;
       const laneWidth = canvas.clientWidth;
       const laneColors = [theme.colors.gray[3], theme.colors.gray[4]];
 
-      for (let i = 0; i < numLanes; i += 1) {
-        const y = i * laneHeight;
-        const color = i % 7 === 0 ? highlightColor : laneColors[i % 2];
+      for (let i = 0; i < numUnits; i += 1) {
+        const y = i * unitHeight;
+        const color = laneColors[i % 2];
         context.fillStyle = color;
-        context.fillRect(0, y, laneWidth, laneHeight);
+        context.fillRect(0, y, laneWidth, unitHeight);
+      }
+
+      if (highlightColor) {
+        for (let i = 0; i < numUnits; i += 7) {
+          const y = i * unitHeight;
+          context.fillStyle = highlightColor;
+          context.fillRect(0, y, laneWidth, unitHeight);
+        }
       }
 
       // Draw grid lines

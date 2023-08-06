@@ -8,6 +8,7 @@ import { scrollXState } from '@atoms/scroll';
 import MiddleHeader from './MiddleHeader';
 import CompositionFooter from './CompositionFooter';
 import Lane from './Lane';
+import useDrumkit from '@hooks/useDrumKit';
 
 const useStyles = createStyles((theme) => ({
   mid: {
@@ -141,6 +142,7 @@ export default function Middle({ isPlaying }: Props) {
   const { classes } = useStyles();
   const theme = useMantineTheme();
   const { piano, isPianoReady } = usePiano();
+  const { drumkit, isDrumkitReady } = useDrumkit();
 
   const [sizes, setSizes] = React.useState<(number | string)[]>(['50%', '50%']);
   const [scrollX, setScrollX] = useRecoilState(scrollXState);
@@ -206,7 +208,7 @@ export default function Middle({ isPlaying }: Props) {
               </div>
             </div>
             {isPianoReady && (
-              <Lane highlightColor={theme.colors.teal[3]} instruments={piano} type="melody" />
+              <Lane highlightColor={theme.colors.teal[3]} instruments={piano} unitHeight={30} />
             )}
           </Pane>
           <Pane className={classes.pane} style={{ background: '#c0c3c6' }} minSize={100}>
@@ -245,7 +247,7 @@ export default function Middle({ isPlaying }: Props) {
                 </div>
               </div>
             </div>
-            <Lane highlightColor={theme.colors.cyan[3]} instruments={[]} type="drums" />
+            {isDrumkitReady && <Lane instruments={drumkit} unitHeight={50} />}
           </Pane>
         </SplitPane>
       </div>
