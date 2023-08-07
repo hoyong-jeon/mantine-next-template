@@ -1,5 +1,5 @@
 import React from 'react';
-import { createStyles, UnstyledButton, useMantineTheme } from '@mantine/core';
+import { createStyles, UnstyledButton } from '@mantine/core';
 import GridLines from './GridLines';
 
 interface Instrument {
@@ -71,8 +71,8 @@ const useStyles = createStyles((theme, { numUnits, highlightColor, unitHeight }:
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
-    fontSize: 15,
-    fontWeight: 800,
+    fontSize: 9,
+    fontWeight: 600,
     color: 'white',
     cursor: 'pointer',
     userSelect: 'none',
@@ -99,8 +99,10 @@ const useStyles = createStyles((theme, { numUnits, highlightColor, unitHeight }:
 }));
 
 export default function Lane({ instruments, highlightColor, unitHeight }: Props) {
+  const numUnits = instruments.length;
+
   const { classes } = useStyles({
-    numUnits: instruments.length,
+    numUnits,
     highlightColor,
     unitHeight,
   });

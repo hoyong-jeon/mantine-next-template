@@ -50,88 +50,6 @@ const useStyles = createStyles((theme) => ({
     borderTop: '1px solid white',
     borderBottom: '1px solid white',
   },
-  lane: {
-    position: 'relative',
-    height: '100%',
-    flex: 1,
-  },
-  scrollable: {
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    width: '100%',
-    height: '100%',
-    overflowX: 'hidden',
-    overflowY: 'scroll',
-    backgroundColor: theme.colors.gray[2],
-  },
-  keysAndGrid: {
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    width: '100%',
-    height: 800,
-    backgroundColor: theme.colors.gray[0],
-  },
-  keysWrapper: {
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    width: 60,
-    height: '100%',
-    backgroundColor: theme.colors.gray[0],
-    boxShadow: '2px 0px 2px 0px rgba(0, 0, 0, 0.10)',
-    zIndex: 2,
-  },
-  keys: {
-    position: 'absolute',
-    top: '50%',
-    transform: 'translateY(-50%)',
-    left: 0,
-    width: '100%',
-    height: 'calc(30px * 22)',
-    backgroundColor: 'red',
-    display: 'flex',
-    flexDirection: 'column',
-  },
-  key: {
-    width: '100%',
-    height: 30,
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    fontSize: 15,
-    fontWeight: 800,
-    color: 'white',
-    cursor: 'pointer',
-    userSelect: 'none',
-
-    ':nth-of-type(odd)': {
-      backgroundColor: theme.colors.gray[3],
-    },
-    ':nth-of-type(even)': {
-      backgroundColor: theme.colors.gray[4],
-    },
-  },
-  keyHighlightTeal: {
-    ':nth-of-type(7n + 1)': {
-      backgroundColor: theme.colors.teal[3],
-    },
-  },
-  keyHighlightCyan: {
-    ':nth-of-type(7n + 1)': {
-      backgroundColor: theme.colors.cyan[3],
-    },
-  },
-  grid: {
-    position: 'absolute',
-    top: '50%',
-    transform: 'translateY(-50%)',
-    left: 0,
-    width: '100%',
-    height: 'calc(30px * 22)',
-    borderLeft: '60px solid transparent',
-  },
 }));
 
 interface Props {
@@ -140,9 +58,20 @@ interface Props {
 
 export default function Middle({ isPlaying }: Props) {
   const { classes } = useStyles();
-  const theme = useMantineTheme();
   const { piano, isPianoReady } = usePiano();
   const { drumkit, isDrumkitReady } = useDrumkit();
+
+  const theme = useMantineTheme();
+
+  const PLAYER_INFO = {
+    piano: {
+      highlightColor: theme.colors.teal[3],
+      unitHeight: 30,
+    },
+    drumkit: {
+      unitHeight: 50,
+    },
+  };
 
   const [sizes, setSizes] = React.useState<(number | string)[]>(['50%', '50%']);
   const [scrollX, setScrollX] = useRecoilState(scrollXState);
@@ -171,7 +100,12 @@ export default function Middle({ isPlaying }: Props) {
           sashRender={(index: number, active: boolean) => <div className={classes.splitter} />}
           onChange={(s) => setSizes(s)}
         >
-          <Pane className={classes.pane} style={{ background: '#ddd' }} minSize={100}>
+          <Pane
+            className={classes.pane}
+            style={{ background: '#ddd' }}
+            minSize={100}
+            maxSize={140 + PLAYER_INFO.piano.unitHeight * piano.length}
+          >
             <div className={classes.side}>
               <div className={classes.instControls}>
                 <ThemeIcon variant="light" radius="xl" size={50} color="teal">
@@ -208,10 +142,19 @@ export default function Middle({ isPlaying }: Props) {
               </div>
             </div>
             {isPianoReady && (
-              <Lane highlightColor={theme.colors.teal[3]} instruments={piano} unitHeight={30} />
+              <Lane
+                highlightColor={PLAYER_INFO.piano.highlightColor}
+                instruments={piano}
+                unitHeight={PLAYER_INFO.piano.unitHeight}
+              />
             )}
           </Pane>
-          <Pane className={classes.pane} style={{ background: '#c0c3c6' }} minSize={100}>
+          <Pane
+            className={classes.pane}
+            style={{ background: '#c0c3c6' }}
+            minSize={100}
+            maxSize={140 + PLAYER_INFO.drumkit.unitHeight * drumkit.length}
+          >
             <div className={classes.side}>
               <div className={classes.instControls}>
                 <ThemeIcon variant="light" radius="xl" size={50} color="cyan">
@@ -247,7 +190,9 @@ export default function Middle({ isPlaying }: Props) {
                 </div>
               </div>
             </div>
-            {isDrumkitReady && <Lane instruments={drumkit} unitHeight={50} />}
+            {isDrumkitReady && (
+              <Lane instruments={drumkit} unitHeight={PLAYER_INFO.drumkit.unitHeight} />
+            )}
           </Pane>
         </SplitPane>
       </div>
