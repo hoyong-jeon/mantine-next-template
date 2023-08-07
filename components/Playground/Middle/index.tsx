@@ -2,13 +2,13 @@ import React from 'react';
 import { createStyles, Select, Slider, ThemeIcon, useMantineTheme } from '@mantine/core';
 import SplitPane, { Pane } from 'split-pane-react';
 import { IconPiano } from '@tabler/icons-react';
-import usePiano from '@hooks/usePiano';
+import usePiano from '~hooks/usePiano';
+import useDrumkit from '~hooks/useDrumkit';
 import { useRecoilState } from 'recoil';
 import { scrollXState } from '@atoms/scroll';
 import MiddleHeader from './MiddleHeader';
 import CompositionFooter from './CompositionFooter';
 import Lane from './Lane';
-import useDrumkit from '@hooks/useDrumKit';
 
 const useStyles = createStyles((theme) => ({
   mid: {
