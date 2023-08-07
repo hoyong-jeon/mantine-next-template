@@ -61,7 +61,6 @@ const useStyles = createStyles((theme, { numUnits, highlightColor, unitHeight }:
     left: 0,
     width: '100%',
     height: `calc(${unitHeight}px * ${numUnits})`,
-    backgroundColor: 'red',
     display: 'flex',
     flexDirection: 'column',
   },
