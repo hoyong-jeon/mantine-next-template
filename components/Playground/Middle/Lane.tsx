@@ -1,6 +1,7 @@
 import React from 'react';
 import { createStyles, UnstyledButton } from '@mantine/core';
 import GridLines from './GridLines';
+import RegionNotes from './RegionNotes';
 
 interface Instrument {
   name: string;
@@ -129,6 +130,7 @@ export default function Lane({ instruments, highlightColor, unitHeight }: Props)
               unitHeight={unitHeight}
               highlightColor={highlightColor}
             />
+            <RegionNotes unitHeight={unitHeight} />
           </div>
         </div>
       </div>

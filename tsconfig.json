@@ -19,7 +19,8 @@
       "@pages/*": ["./pages/*"],
       "~hooks/*": ["./hooks/*"],
       "@atoms/*": ["./atoms/*"],
-      "~types/*": ["./types/*"]
+      "~types/*": ["./types/*"],
+      "@constants/*": ["./constants/*"],
     }
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx"],
