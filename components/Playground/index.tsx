@@ -4,7 +4,12 @@ import Top from './Top';
 import Middle from './Middle';
 import Bottom from './Bottom';
 
-export default function Playground() {
+interface Props {
+  piano: any[];
+  drumkit: any[];
+}
+
+export default function Playground({ piano, drumkit }: Props) {
   const [isInitialized, setIsInitialized] = React.useState(false);
   const [isPlaying, setIsPlaying] = React.useState(false);
   const [isStopped, setIsStopped] = React.useState(false);
@@ -35,7 +40,7 @@ export default function Playground() {
   return (
     <>
       <Top />
-      <Middle isPlaying={isPlaying} />
+      <Middle piano={piano} drumkit={drumkit} isPlaying={isPlaying} />
       <Bottom
         isPlaying={isPlaying}
         isStopped={isStopped}

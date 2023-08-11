@@ -3,3 +3,5 @@ export interface Instrument<T> {
   player: T;
   playFn: () => void;
 }
+
+export type LAYER_TYPE = 'melody' | 'drum';

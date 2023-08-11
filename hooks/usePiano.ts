@@ -1,7 +1,7 @@
 import React from 'react';
 import * as Scale from 'tonal-scale';
 import { Synth } from 'tone';
-import type { Instrument } from '~types/instrument';
+import type { Instrument } from '~types/editor';
 
 type PianoRoll = Instrument<Synth>;
 
@@ -23,7 +23,7 @@ export default function usePiano(
     }
 
     notes.push(baseNotes[0] + (octaveRange[1] + 1));
-
+    console.log('again pianoRef.current', pianoRef.current);
     pianoRef.current = notes.map((note) => ({
       name: note,
       player: new Synth().toDestination(),
@@ -32,10 +32,6 @@ export default function usePiano(
         if (target) target.player.triggerAttackRelease(note, '8n');
       },
     }));
-
-    return () => {
-      pianoRef.current.forEach(({ player }) => player.dispose());
-    };
   }, [tonic, scale, octaveRange]);
 
   React.useEffect(() => {

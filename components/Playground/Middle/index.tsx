@@ -4,11 +4,13 @@ import SplitPane, { Pane } from 'split-pane-react';
 import { IconPiano } from '@tabler/icons-react';
 import { useRecoilState } from 'recoil';
 import { scrollXState } from '@atoms/scroll';
-import usePiano from '~hooks/usePiano';
-import useDrumkit from '~hooks/useDrumkit';
+// eslint-disable-next-line import/extensions
+import type { Synth, Player } from 'tone';
 import MiddleHeader from './MiddleHeader';
 import CompositionFooter from './CompositionFooter';
 import Lane from './Lane';
+// eslint-disable-next-line import/extensions
+import { LAYER_TYPE } from '~types/editor';
 
 const useStyles = createStyles((theme) => ({
   mid: {
@@ -54,21 +56,20 @@ const useStyles = createStyles((theme) => ({
 
 interface Props {
   isPlaying: boolean;
+  piano: any[];
+  drumkit: any[];
 }
 
-export default function Middle({ isPlaying }: Props) {
+export default function Middle({ isPlaying, piano, drumkit }: Props) {
   const { classes } = useStyles();
-  const { piano, isPianoReady } = usePiano();
-  const { drumkit, isDrumkitReady } = useDrumkit();
-
   const theme = useMantineTheme();
 
-  const PLAYER_INFO = {
-    piano: {
+  const LAYER_INFO: Record<LAYER_TYPE, any> = {
+    melody: {
       highlightColor: theme.colors.teal[3],
       unitHeight: 30,
     },
-    drumkit: {
+    drum: {
       unitHeight: 50,
     },
   };
@@ -104,7 +105,7 @@ export default function Middle({ isPlaying }: Props) {
             className={classes.pane}
             style={{ background: '#ddd' }}
             minSize={100}
-            maxSize={140 + PLAYER_INFO.piano.unitHeight * piano.length}
+            maxSize={140 + LAYER_INFO.melody.unitHeight * piano.length}
           >
             <div className={classes.side}>
               <div className={classes.instControls}>
@@ -141,19 +142,18 @@ export default function Middle({ isPlaying }: Props) {
                 </div>
               </div>
             </div>
-            {isPianoReady && (
-              <Lane
-                highlightColor={PLAYER_INFO.piano.highlightColor}
-                instruments={piano}
-                unitHeight={PLAYER_INFO.piano.unitHeight}
-              />
-            )}
+            <Lane<Synth>
+              layerType="melody"
+              highlightColor={LAYER_INFO.melody.highlightColor}
+              instruments={piano}
+              unitHeight={LAYER_INFO.melody.unitHeight}
+            />
           </Pane>
           <Pane
             className={classes.pane}
             style={{ background: '#c0c3c6' }}
             minSize={100}
-            maxSize={140 + PLAYER_INFO.drumkit.unitHeight * drumkit.length}
+            maxSize={140 + LAYER_INFO.drum.unitHeight * drumkit.length}
           >
             <div className={classes.side}>
               <div className={classes.instControls}>
@@ -190,9 +190,11 @@ export default function Middle({ isPlaying }: Props) {
                 </div>
               </div>
             </div>
-            {isDrumkitReady && (
-              <Lane instruments={drumkit} unitHeight={PLAYER_INFO.drumkit.unitHeight} />
-            )}
+            <Lane<Player>
+              layerType="drum"
+              instruments={drumkit}
+              unitHeight={LAYER_INFO.drum.unitHeight}
+            />
           </Pane>
         </SplitPane>
       </div>

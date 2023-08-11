@@ -2,18 +2,7 @@ import React from 'react';
 import { createStyles, UnstyledButton } from '@mantine/core';
 import GridLines from './GridLines';
 import RegionNotes from './RegionNotes';
-
-interface Instrument {
-  name: string;
-  player: unknown;
-  playFn: () => void;
-}
-
-interface Props {
-  instruments: Instrument[];
-  unitHeight: number;
-  highlightColor?: string;
-}
+import type { Instrument, LAYER_TYPE } from '~types/editor';
 
 interface StylesProps {
   highlightColor?: string;
@@ -98,7 +87,14 @@ const useStyles = createStyles((theme, { numUnits, highlightColor, unitHeight }:
   },
 }));
 
-export default function Lane({ instruments, highlightColor, unitHeight }: Props) {
+interface Props<T> {
+  layerType: LAYER_TYPE;
+  instruments: Instrument<T>[];
+  unitHeight: number;
+  highlightColor?: string;
+}
+
+export default function Lane<T>({ layerType, instruments, highlightColor, unitHeight }: Props<T>) {
   const numUnits = instruments.length;
 
   const { classes } = useStyles({
@@ -130,7 +126,7 @@ export default function Lane({ instruments, highlightColor, unitHeight }: Props)
               unitHeight={unitHeight}
               highlightColor={highlightColor}
             />
-            <RegionNotes unitHeight={unitHeight} />
+            <RegionNotes instruments={instruments} layerType={layerType} unitHeight={unitHeight} />
           </div>
         </div>
       </div>

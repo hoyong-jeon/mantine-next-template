@@ -1,6 +1,6 @@
 import React from 'react';
 import { Player } from 'tone';
-import type { Instrument } from '~types/instrument';
+import type { Instrument } from '~types/editor';
 
 type Drum = Instrument<Player>;
 

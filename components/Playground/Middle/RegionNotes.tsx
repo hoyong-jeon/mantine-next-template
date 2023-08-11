@@ -1,8 +1,14 @@
+/* eslint-disable import/extensions */
+/* eslint-disable jsx-a11y/click-events-have-key-events */
 import React from 'react';
 import { createStyles } from '@mantine/core';
 import { scrollXState } from '@atoms/scroll';
 import { STEP_WIDTH } from '@constants/editor';
 import { useRecoilValue } from 'recoil';
+import { Player, Synth } from 'tone';
+import { Instrument, LAYER_TYPE } from '~types/editor';
+import PlayerEvent from './PlayerEvent';
+import SynthEvent from './SynthEvent';
 
 interface StylesProps {
   unitHeight: number;
@@ -31,15 +37,24 @@ const useStyles = createStyles((theme, { unitHeight }: StylesProps) => ({
   },
 }));
 
-interface Props {
-  unitHeight: number;
+interface Event {
+  x: number;
+  y: number;
+  event: SynthEvent | PlayerEvent;
 }
 
-export default function RegionNotes({ unitHeight }: Props) {
+interface Props {
+  layerType: LAYER_TYPE;
+  unitHeight: number;
+  instruments: any[];
+}
+
+export default function RegionNotes({ layerType, unitHeight, instruments }: Props) {
   const { classes } = useStyles({ unitHeight });
   const scrollX = useRecoilValue(scrollXState);
-  //   const [coord, setCoord] = React.useState({ x: 0, y: 0 });
-  const [coords, setCoords] = React.useState<{ x: number; y: number }[]>([]);
+
+  //   const [coords, setCoords] = React.useState<{ x: number; y: number }[]>([]);
+  const [events, setEvents] = React.useState<Event[]>([]);
 
   const regionNotesRef = React.useRef<HTMLDivElement>(null);
 
@@ -58,23 +73,39 @@ export default function RegionNotes({ unitHeight }: Props) {
 
       const snapX = timelinePosition * STEP_WIDTH;
       const snapY = pitchPosition * unitHeight;
+      const inst = instruments[pitchPosition];
 
-      setCoords([...coords, { x: snapX, y: snapY }]);
+      const newEvent = {
+        x: snapX,
+        y: snapY,
+        event:
+          layerType === 'melody'
+            ? new SynthEvent((inst as Instrument<Synth>).player, timelinePosition, {
+                duration: 1,
+                note: inst.name,
+              })
+            : new PlayerEvent((inst as Instrument<Player>).player, timelinePosition, {
+                duration: 1,
+              }),
+      };
+
+      setEvents((prev) => [...prev, newEvent]);
 
       // console.log(`timelinePosition: ${timelinePosition}, pitchPosition: ${pitchPosition}`);
     },
-    [coords, scrollX, unitHeight]
+    [scrollX, unitHeight]
   );
 
   return (
+    // eslint-disable-next-line jsx-a11y/no-static-element-interactions
     <div className={classes.regionNotes} ref={regionNotesRef} onClick={handleClickRegionNotes}>
-      {coords.map((coord, index) => (
+      {events.map(({ x, y }, index) => (
         <div
           key={index}
           className={classes.aNote}
           style={{
-            left: coord.x - scrollX,
-            top: coord.y,
+            left: x - scrollX,
+            top: y,
           }}
         />
       ))}

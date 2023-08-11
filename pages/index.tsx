@@ -4,6 +4,9 @@ import 'split-pane-react/esm/themes/default.css';
 import { createStyles } from '@mantine/core';
 import Playground from '@components/Playground';
 
+import usePiano from '~hooks/usePiano';
+import useDrumkit from '~hooks/useDrumkit';
+
 const useStyles = createStyles(() => ({
   app: {
     height: '100vh',
@@ -14,9 +17,13 @@ const useStyles = createStyles(() => ({
 export default function HomePage() {
   const { classes } = useStyles();
 
+  const { piano, isPianoReady } = usePiano();
+  const { drumkit, isDrumkitReady } = useDrumkit();
+  const isReady = isPianoReady && isDrumkitReady;
+
   return (
     <div className={classes.app}>
-      <Playground />
+      {isReady && <Playground piano={piano.reverse()} drumkit={drumkit.reverse()} />}
     </div>
   );
 }
