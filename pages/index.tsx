@@ -19,5 +19,5 @@ export default function HomePage() {
   const { drumkit, isDrumkitReady } = useDrumkit();
   const isReady = isDrumkitReady;
 
-  return <div className={classes.app}>{isReady && <Playground drumkit={drumkit.reverse()} />}</div>;
+  return <div className={classes.app}>{isReady && <Playground drumkit={drumkit} />}</div>;
 }
