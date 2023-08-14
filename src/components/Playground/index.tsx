@@ -1,18 +1,20 @@
 import React from 'react';
 import * as Tone from 'tone';
+import genSynths from '@utils/genSynths';
 import Top from './Top';
 import Middle from './Middle';
 import Bottom from './Bottom';
 
 interface Props {
-  piano: any[];
   drumkit: any[];
 }
 
-export default function Playground({ piano, drumkit }: Props) {
+export default function Playground({ drumkit }: Props) {
   const [isInitialized, setIsInitialized] = React.useState(false);
   const [isPlaying, setIsPlaying] = React.useState(false);
   const [isStopped, setIsStopped] = React.useState(false);
+
+  const piano = genSynths();
 
   const handleTogglePlay = () => {
     if (!isInitialized) {
@@ -40,7 +42,7 @@ export default function Playground({ piano, drumkit }: Props) {
   return (
     <>
       <Top />
-      <Middle piano={piano} drumkit={drumkit} isPlaying={isPlaying} />
+      <Middle piano={piano.reverse()} drumkit={drumkit} isPlaying={isPlaying} />
       <Bottom
         isPlaying={isPlaying}
         isStopped={isStopped}

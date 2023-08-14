@@ -1,7 +1,7 @@
-export interface Instrument<T> {
+export interface Instrument {
   name: string;
-  player: T;
+  player: unknown;
   playFn: () => void;
 }
 
-export type LAYER_TYPE = 'melody' | 'drum';
+export type LayerType = 'melody' | 'drum';

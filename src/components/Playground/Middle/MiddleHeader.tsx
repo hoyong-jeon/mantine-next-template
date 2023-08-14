@@ -236,7 +236,13 @@ export default function MiddleHeader({ scrollX, isPlaying, onClickEqualizer, onS
             <IconEqual />
           </ActionIcon>
         </div>
-        <div className={classes.timelineControls} onClick={handleClickRuler}>
+        <div
+          className={classes.timelineControls}
+          onClick={handleClickRuler}
+          onKeyDown={() => {}}
+          role="button"
+          tabIndex={0}
+        >
           <div className={classes.beatRuler} ref={beatRulerRef}>
             <div className={classes.highlightBar} />
             <canvas className={classes.axisCanvas} ref={canvasRef} />

@@ -2,7 +2,7 @@ import React from 'react';
 import { Player } from 'tone';
 import type { Instrument } from '@customTypes/editor';
 
-type Drum = Instrument<Player>;
+type Drum = Instrument;
 
 const DRUM_PATHS = [
   '/sounds/kick.mp3',

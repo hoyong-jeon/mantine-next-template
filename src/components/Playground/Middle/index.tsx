@@ -3,9 +3,8 @@ import { createStyles, Select, Slider, ThemeIcon, useMantineTheme } from '@manti
 import SplitPane, { Pane } from 'split-pane-react';
 import { IconPiano } from '@tabler/icons-react';
 import { useRecoilState } from 'recoil';
-import type { Synth, Player } from 'tone';
 import { scrollXState } from '@atoms/scroll';
-import { LAYER_TYPE } from '@customTypes/editor';
+import { LayerType } from '@customTypes/editor';
 import MiddleHeader from './MiddleHeader';
 import CompositionFooter from './CompositionFooter';
 import Lane from './Lane';
@@ -62,7 +61,7 @@ export default function Middle({ isPlaying, piano, drumkit }: Props) {
   const { classes } = useStyles();
   const theme = useMantineTheme();
 
-  const LAYER_INFO: Record<LAYER_TYPE, any> = {
+  const LAYER_INFO: Record<LayerType, any> = {
     melody: {
       highlightColor: theme.colors.teal[3],
       unitHeight: 30,
@@ -140,7 +139,7 @@ export default function Middle({ isPlaying, piano, drumkit }: Props) {
                 </div>
               </div>
             </div>
-            <Lane<Synth>
+            <Lane
               layerType="melody"
               highlightColor={LAYER_INFO.melody.highlightColor}
               instruments={piano}
@@ -188,11 +187,7 @@ export default function Middle({ isPlaying, piano, drumkit }: Props) {
                 </div>
               </div>
             </div>
-            <Lane<Player>
-              layerType="drum"
-              instruments={drumkit}
-              unitHeight={LAYER_INFO.drum.unitHeight}
-            />
+            <Lane layerType="drum" instruments={drumkit} unitHeight={LAYER_INFO.drum.unitHeight} />
           </Pane>
         </SplitPane>
       </div>

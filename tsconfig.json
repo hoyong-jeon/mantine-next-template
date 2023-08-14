@@ -21,6 +21,7 @@
       "@atoms/*": ["./src/atoms/*"],
       "@customTypes/*": ["./src/types/*"],
       "@constants/*": ["./src/constants/*"],
+      "@utils/*": ["./src/utils/*"],
     }
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx"],

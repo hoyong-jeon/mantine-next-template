@@ -1,2 +1,3 @@
 - usepiano cleanup 
-- whole code refactor
+
+- sound control state(for melody), sounds interface structure (ex. useSampler, usePlayer hooks)

@@ -1,6 +1,6 @@
 import React from 'react';
 import { createStyles, UnstyledButton } from '@mantine/core';
-import type { Instrument, LAYER_TYPE } from '@customTypes/editor';
+import type { Instrument, LayerType } from '@customTypes/editor';
 import GridLines from './GridLines';
 import RegionNotes from './RegionNotes';
 
@@ -87,14 +87,14 @@ const useStyles = createStyles((theme, { numUnits, highlightColor, unitHeight }:
   },
 }));
 
-interface Props<T> {
-  layerType: LAYER_TYPE;
-  instruments: Instrument<T>[];
+interface Props {
+  layerType: LayerType;
+  instruments: Instrument[];
   unitHeight: number;
   highlightColor?: string;
 }
 
-export default function Lane<T>({ layerType, instruments, highlightColor, unitHeight }: Props<T>) {
+export default function Lane({ layerType, instruments, highlightColor, unitHeight }: Props) {
   const numUnits = instruments.length;
 
   const { classes } = useStyles({

@@ -1,10 +1,9 @@
 import React from 'react';
 import { createStyles } from '@mantine/core';
 import { useRecoilValue } from 'recoil';
-import { Player, Synth } from 'tone';
 import { scrollXState } from '@atoms/scroll';
 import { STEP_WIDTH } from '@constants/editor';
-import { Instrument, LAYER_TYPE } from '@customTypes/editor';
+import { LayerType } from '@customTypes/editor';
 import PlayerEvent from './PlayerEvent';
 import SynthEvent from './SynthEvent';
 
@@ -42,7 +41,7 @@ interface Event {
 }
 
 interface Props {
-  layerType: LAYER_TYPE;
+  layerType: LayerType;
   unitHeight: number;
   instruments: any[];
 }
@@ -78,11 +77,11 @@ export default function RegionNotes({ layerType, unitHeight, instruments }: Prop
         y: snapY,
         event:
           layerType === 'melody'
-            ? new SynthEvent((inst as Instrument<Synth>).player, timelinePosition, {
+            ? new SynthEvent(inst.player, timelinePosition, {
                 duration: 1,
                 note: inst.name,
               })
-            : new PlayerEvent((inst as Instrument<Player>).player, timelinePosition, {
+            : new PlayerEvent(inst.player, timelinePosition, {
                 duration: 1,
               }),
       };
@@ -95,7 +94,14 @@ export default function RegionNotes({ layerType, unitHeight, instruments }: Prop
   );
 
   return (
-    <div className={classes.regionNotes} ref={regionNotesRef} onClick={handleClickRegionNotes}>
+    <div
+      className={classes.regionNotes}
+      ref={regionNotesRef}
+      onClick={handleClickRegionNotes}
+      onKeyDown={() => {}}
+      role="button"
+      tabIndex={0}
+    >
       {events.map(({ x, y }, index) => (
         <div
           key={index}
