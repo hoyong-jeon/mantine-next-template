@@ -6,12 +6,9 @@ import { STEP_WIDTH } from '@constants/editor';
 import { LayerType } from '@customTypes/editor';
 import PlayerEvent from './PlayerEvent';
 import SynthEvent from './SynthEvent';
+import FlexNote from './FlexNote';
 
-interface StylesProps {
-  unitHeight: number;
-}
-
-const useStyles = createStyles((theme, { unitHeight }: StylesProps) => ({
+const useStyles = createStyles(() => ({
   regionNotes: {
     position: 'absolute',
     top: 0,
@@ -21,16 +18,6 @@ const useStyles = createStyles((theme, { unitHeight }: StylesProps) => ({
     userSelect: 'none',
     touchAction: 'pan-y',
     cursor: 'pointer',
-  },
-  aNote: {
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    width: 20,
-    height: unitHeight,
-    backgroundColor: theme.colors.blue[5],
-    borderRadius: 2,
-    boxShadow: '0px 0px 2px 0px rgba(0, 0, 0, 0.10)',
   },
 }));
 
@@ -47,7 +34,7 @@ interface Props {
 }
 
 export default function RegionNotes({ layerType, unitHeight, instruments }: Props) {
-  const { classes } = useStyles({ unitHeight });
+  const { classes } = useStyles();
   const scrollX = useRecoilValue(scrollXState);
 
   //   const [coords, setCoords] = React.useState<{ x: number; y: number }[]>([]);
@@ -103,14 +90,7 @@ export default function RegionNotes({ layerType, unitHeight, instruments }: Prop
       tabIndex={0}
     >
       {events.map(({ x, y }, index) => (
-        <div
-          key={index}
-          className={classes.aNote}
-          style={{
-            left: x - scrollX,
-            top: y,
-          }}
-        />
+        <FlexNote key={index} x={x - scrollX} y={y} layerType={layerType} unitHeight={unitHeight} />
       ))}
     </div>
   );
