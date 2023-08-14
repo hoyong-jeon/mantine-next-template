@@ -1,7 +1,7 @@
 import React from 'react';
 import { createStyles, useMantineTheme } from '@mantine/core';
 // eslint-disable-next-line import/extensions
-import useScrollXReactiveCanvas from '~hooks/useScrollXReactiveCanvas';
+import useScrollXReactiveCanvas from '@hooks/useScrollXReactiveCanvas';
 
 const useStyles = createStyles(() => ({
   canvas: {

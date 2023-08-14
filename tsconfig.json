@@ -15,12 +15,12 @@
     "jsx": "preserve",
     "incremental": true,
     "paths": {
-      "@components/*": ["./components/*"],
+      "@components/*": ["./src/components/*"],
       "@pages/*": ["./pages/*"],
-      "~hooks/*": ["./hooks/*"],
-      "@atoms/*": ["./atoms/*"],
-      "~types/*": ["./types/*"],
-      "@constants/*": ["./constants/*"],
+      "@hooks/*": ["./src/hooks/*"],
+      "@atoms/*": ["./src/atoms/*"],
+      "@customTypes/*": ["./src/types/*"],
+      "@constants/*": ["./src/constants/*"],
     }
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx"],

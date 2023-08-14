@@ -1,12 +1,10 @@
-/* eslint-disable import/extensions */
-/* eslint-disable jsx-a11y/click-events-have-key-events */
 import React from 'react';
 import { createStyles } from '@mantine/core';
-import { scrollXState } from '@atoms/scroll';
-import { STEP_WIDTH } from '@constants/editor';
 import { useRecoilValue } from 'recoil';
 import { Player, Synth } from 'tone';
-import { Instrument, LAYER_TYPE } from '~types/editor';
+import { scrollXState } from '@atoms/scroll';
+import { STEP_WIDTH } from '@constants/editor';
+import { Instrument, LAYER_TYPE } from '@customTypes/editor';
 import PlayerEvent from './PlayerEvent';
 import SynthEvent from './SynthEvent';
 
@@ -97,7 +95,6 @@ export default function RegionNotes({ layerType, unitHeight, instruments }: Prop
   );
 
   return (
-    // eslint-disable-next-line jsx-a11y/no-static-element-interactions
     <div className={classes.regionNotes} ref={regionNotesRef} onClick={handleClickRegionNotes}>
       {events.map(({ x, y }, index) => (
         <div

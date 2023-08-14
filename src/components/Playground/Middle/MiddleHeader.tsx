@@ -1,8 +1,6 @@
-/* eslint-disable jsx-a11y/no-static-element-interactions */
-/* eslint-disable jsx-a11y/click-events-have-key-events */
 import React from 'react';
 import { createStyles, Button, ActionIcon } from '@mantine/core';
-import useScrollXReactiveCanvas from '~hooks/useScrollXReactiveCanvas';
+import useScrollXReactiveCanvas from '@hooks/useScrollXReactiveCanvas';
 import { IconEqual } from '@tabler/icons-react';
 import * as Tone from 'tone';
 import { TOTAL_TIME, TOTAL_WIDTH, STEP_WIDTH, TIME_PER_STEP } from '@constants/editor';

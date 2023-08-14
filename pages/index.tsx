@@ -4,8 +4,8 @@ import 'split-pane-react/esm/themes/default.css';
 import { createStyles } from '@mantine/core';
 import Playground from '@components/Playground';
 
-import usePiano from '~hooks/usePiano';
-import useDrumkit from '~hooks/useDrumkit';
+import usePiano from '@hooks/usePiano';
+import useDrumkit from '@hooks/useDrumkit';
 
 const useStyles = createStyles(() => ({
   app: {

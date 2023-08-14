@@ -1,8 +1,8 @@
 import React from 'react';
 import { createStyles, UnstyledButton } from '@mantine/core';
+import type { Instrument, LAYER_TYPE } from '@customTypes/editor';
 import GridLines from './GridLines';
 import RegionNotes from './RegionNotes';
-import type { Instrument, LAYER_TYPE } from '~types/editor';
 
 interface StylesProps {
   highlightColor?: string;

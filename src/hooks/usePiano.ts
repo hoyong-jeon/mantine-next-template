@@ -1,7 +1,7 @@
 import React from 'react';
 import * as Scale from 'tonal-scale';
 import { Synth } from 'tone';
-import type { Instrument } from '~types/editor';
+import type { Instrument } from '@customTypes/editor';
 
 type PianoRoll = Instrument<Synth>;
 

@@ -3,14 +3,12 @@ import { createStyles, Select, Slider, ThemeIcon, useMantineTheme } from '@manti
 import SplitPane, { Pane } from 'split-pane-react';
 import { IconPiano } from '@tabler/icons-react';
 import { useRecoilState } from 'recoil';
-import { scrollXState } from '@atoms/scroll';
-// eslint-disable-next-line import/extensions
 import type { Synth, Player } from 'tone';
+import { scrollXState } from '@atoms/scroll';
+import { LAYER_TYPE } from '@customTypes/editor';
 import MiddleHeader from './MiddleHeader';
 import CompositionFooter from './CompositionFooter';
 import Lane from './Lane';
-// eslint-disable-next-line import/extensions
-import { LAYER_TYPE } from '~types/editor';
 
 const useStyles = createStyles((theme) => ({
   mid: {
