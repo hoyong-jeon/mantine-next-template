@@ -40,12 +40,12 @@ export default function useDrumkit() {
       player: new Player(path).toDestination(),
       playFn: () => {
         const target = drumkitRef.current.find(({ name }) => name === getPascalName(path));
-        if (target) target.player.start();
+        if (target) (target.player as Player).start();
       },
     }));
 
     return () => {
-      drumkitRef.current.forEach(({ player }) => player.dispose());
+      drumkitRef.current.forEach(({ player }) => (player as Player).dispose());
     };
   }, []);
 
