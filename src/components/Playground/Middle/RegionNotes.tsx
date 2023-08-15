@@ -23,7 +23,7 @@ const useStyles = createStyles(() => ({
 
 interface Event {
   left: number;
-  right: number;
+  top: number;
   event: SynthEvent | PlayerEvent;
 }
 
@@ -56,12 +56,12 @@ export default function RegionNotes({ layerType, unitHeight, instruments }: Prop
       const pitchPosition = Math.floor(offsetY / unitHeight);
 
       const snapLeft = timelinePosition * STEP_WIDTH;
-      const snapRight = pitchPosition * unitHeight;
+      const snapTop = pitchPosition * unitHeight;
       const inst = instruments[pitchPosition];
 
       const newEvent: Event = {
-        x: snapX,
-        y: snapY,
+        left: snapLeft,
+        top: snapTop,
         event:
           layerType === 'melody'
             ? new SynthEvent(inst.player, timelinePosition, {
@@ -89,13 +89,14 @@ export default function RegionNotes({ layerType, unitHeight, instruments }: Prop
       role="button"
       tabIndex={0}
     >
-      {events.map(({ x, y }, index) => (
+      {events.map(({ left, top }, index) => (
         <FlexNote
           key={index}
-          x={x - scrollLeft}
-          y={y}
+          left={left - scrollLeft}
+          top={top}
           layerType={layerType}
           unitHeight={unitHeight}
+          onEditNote={() => {}}
         />
       ))}
     </div>

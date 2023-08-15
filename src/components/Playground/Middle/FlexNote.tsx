@@ -31,13 +31,13 @@ const useStyles = createStyles((theme, { unitHeight, layerType }: StylesProps) =
 
 interface Props {
   left: number;
-  right: number;
+  top: number;
   layerType: LayerType;
   unitHeight: number;
   onEditNote: (dx: number, dy: number, length: number) => void;
 }
 
-export default function FlexNote({ x, y, layerType, unitHeight }: Props) {
+export default function FlexNote({ left, top, layerType, unitHeight }: Props) {
   const { classes } = useStyles({ unitHeight, layerType });
 
   const regionNotesRef = React.useRef<HTMLDivElement>(null);
@@ -46,18 +46,17 @@ export default function FlexNote({ x, y, layerType, unitHeight }: Props) {
     e.stopPropagation();
   }, []);
 
-  const handleMouseDown;
-
   return (
     <div
       className={classes.container}
       ref={regionNotesRef}
       onClick={handleClickRegionNotes}
-      style={{ left: x, top: y }}
+      style={{ left, top }}
+      role="button"
+      tabIndex={0}
+      onKeyDown={() => {}}
     >
-      {layerType === 'melody' && (
-        <div className={classes.head} onMouseDown={} onMouseMove={} onMouseUp={} />
-      )}
+      {layerType === 'melody' && <div className={classes.head} />}
     </div>
   );
 }
