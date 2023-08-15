@@ -30,10 +30,11 @@ const useStyles = createStyles((theme, { unitHeight, layerType }: StylesProps) =
 }));
 
 interface Props {
-  x: number;
-  y: number;
+  left: number;
+  right: number;
   layerType: LayerType;
   unitHeight: number;
+  onEditNote: (dx: number, dy: number, length: number) => void;
 }
 
 export default function FlexNote({ x, y, layerType, unitHeight }: Props) {
@@ -45,6 +46,8 @@ export default function FlexNote({ x, y, layerType, unitHeight }: Props) {
     e.stopPropagation();
   }, []);
 
+  const handleMouseDown;
+
   return (
     <div
       className={classes.container}
@@ -52,7 +55,9 @@ export default function FlexNote({ x, y, layerType, unitHeight }: Props) {
       onClick={handleClickRegionNotes}
       style={{ left: x, top: y }}
     >
-      {layerType === 'melody' && <div className={classes.head} />}
+      {layerType === 'melody' && (
+        <div className={classes.head} onMouseDown={} onMouseMove={} onMouseUp={} />
+      )}
     </div>
   );
 }

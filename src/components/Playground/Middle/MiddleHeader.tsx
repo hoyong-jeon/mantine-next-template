@@ -1,6 +1,6 @@
 import React from 'react';
 import { createStyles, Button, ActionIcon } from '@mantine/core';
-import useScrollXReactiveCanvas from '@hooks/useScrollXReactiveCanvas';
+import useScrollLeftReactiveCanvas from '@hooks/useScrollLeftReactiveCanvas';
 import { IconEqual } from '@tabler/icons-react';
 import * as Tone from 'tone';
 import { TOTAL_TIME, TOTAL_WIDTH, STEP_WIDTH, TIME_PER_STEP } from '@constants/editor';
@@ -103,13 +103,18 @@ const useStyles = createStyles((theme) => ({
 }));
 
 interface Props {
-  scrollX: number;
+  scrollLeft: number;
   isPlaying: boolean;
   onClickEqualizer: () => void;
-  onScrollX: (scrollX: number) => void;
+  onScrollX: (scrollLeft: number) => void;
 }
 
-export default function MiddleHeader({ scrollX, isPlaying, onClickEqualizer, onScrollX }: Props) {
+export default function MiddleHeader({
+  scrollLeft,
+  isPlaying,
+  onClickEqualizer,
+  onScrollX,
+}: Props) {
   const { classes } = useStyles();
 
   const beatRulerRef = React.useRef<HTMLDivElement>(null);
@@ -122,11 +127,11 @@ export default function MiddleHeader({ scrollX, isPlaying, onClickEqualizer, onS
       const numLines = Math.ceil(canvas.clientWidth / gap) + 1;
 
       for (let i = 0; i < numLines; i += 1) {
-        const x = i * gap - (scrollX % gap);
+        const x = i * gap - (scrollLeft % gap);
         context.beginPath();
 
         // Draw number marks
-        const mark = Math.floor((i * gap + scrollX) / gap);
+        const mark = Math.floor((i * gap + scrollLeft) / gap);
 
         if (mark % 4 === 0) {
           context.moveTo(x, 0);
@@ -146,7 +151,7 @@ export default function MiddleHeader({ scrollX, isPlaying, onClickEqualizer, onS
         }
       }
     },
-    [scrollX]
+    [scrollLeft]
   );
 
   const updatePlayhead = React.useCallback(() => {
@@ -158,7 +163,7 @@ export default function MiddleHeader({ scrollX, isPlaying, onClickEqualizer, onS
     const totalTime = TOTAL_TIME;
     const absolutePosition = (currentTime / totalTime) * TOTAL_WIDTH;
 
-    const relativePosition = absolutePosition - scrollX;
+    const relativePosition = absolutePosition - scrollLeft;
     if (relativePosition < 0 || relativePosition > beatRuler.clientWidth) {
       playhead.style.display = 'none';
     } else {
@@ -167,10 +172,10 @@ export default function MiddleHeader({ scrollX, isPlaying, onClickEqualizer, onS
 
       // Scroll to playhead if it's near the edge, only if playing
       if (relativePosition > beatRuler.clientWidth - 50 && isPlaying) {
-        onScrollX(scrollX + (beatRuler.clientWidth - 100));
+        onScrollX(scrollLeft + (beatRuler.clientWidth - 100));
       }
     }
-  }, [scrollX, isPlaying]);
+  }, [scrollLeft, isPlaying]);
 
   const goToTime = (timelinePosition: number) => {
     const time = timelinePosition * TIME_PER_STEP;
@@ -186,7 +191,7 @@ export default function MiddleHeader({ scrollX, isPlaying, onClickEqualizer, onS
       // mouse offset x from ruler
       const offsetX = event.clientX - beatRuler.getBoundingClientRect().left;
       // absolute position of mouse click
-      const absolutePosition = offsetX + scrollX;
+      const absolutePosition = offsetX + scrollLeft;
       // get timeline position based on resolution of STEP_WIDTH
       const timelinePosition = Math.floor(absolutePosition / STEP_WIDTH);
       // get time based on timeline position
@@ -194,7 +199,7 @@ export default function MiddleHeader({ scrollX, isPlaying, onClickEqualizer, onS
       // go to time
       goToTime(timelinePosition);
     },
-    [scrollX]
+    [scrollLeft]
   );
 
   React.useEffect(() => {
@@ -212,9 +217,9 @@ export default function MiddleHeader({ scrollX, isPlaying, onClickEqualizer, onS
     }
 
     return () => window.cancelAnimationFrame(animationFrameId);
-  }, [scrollX, isPlaying]);
+  }, [scrollLeft, isPlaying]);
 
-  const canvasRef = useScrollXReactiveCanvas(onDraw);
+  const canvasRef = useScrollLeftReactiveCanvas(onDraw);
 
   return (
     <div className={classes.middleHeader}>

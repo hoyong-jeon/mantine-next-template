@@ -1,7 +1,7 @@
 import React from 'react';
 import { createStyles } from '@mantine/core';
 import { useRecoilValue } from 'recoil';
-import { scrollXState } from '@atoms/scroll';
+import { scrollLeftState } from '@atoms/scroll';
 import { STEP_WIDTH } from '@constants/editor';
 import { LayerType } from '@customTypes/editor';
 import PlayerEvent from './PlayerEvent';
@@ -22,8 +22,8 @@ const useStyles = createStyles(() => ({
 }));
 
 interface Event {
-  x: number;
-  y: number;
+  left: number;
+  right: number;
   event: SynthEvent | PlayerEvent;
 }
 
@@ -35,7 +35,7 @@ interface Props {
 
 export default function RegionNotes({ layerType, unitHeight, instruments }: Props) {
   const { classes } = useStyles();
-  const scrollX = useRecoilValue(scrollXState);
+  const scrollLeft = useRecoilValue(scrollLeftState);
 
   //   const [coords, setCoords] = React.useState<{ x: number; y: number }[]>([]);
   const [events, setEvents] = React.useState<Event[]>([]);
@@ -50,16 +50,16 @@ export default function RegionNotes({ layerType, unitHeight, instruments }: Prop
       const offsetX = event.clientX - regionNotes.getBoundingClientRect().left;
       const offsetY = event.clientY - regionNotes.getBoundingClientRect().top;
 
-      const absoluteX = offsetX + scrollX;
+      const absoluteX = offsetX + scrollLeft;
 
       const timelinePosition = Math.floor(absoluteX / STEP_WIDTH);
       const pitchPosition = Math.floor(offsetY / unitHeight);
 
-      const snapX = timelinePosition * STEP_WIDTH;
-      const snapY = pitchPosition * unitHeight;
+      const snapLeft = timelinePosition * STEP_WIDTH;
+      const snapRight = pitchPosition * unitHeight;
       const inst = instruments[pitchPosition];
 
-      const newEvent = {
+      const newEvent: Event = {
         x: snapX,
         y: snapY,
         event:
@@ -77,7 +77,7 @@ export default function RegionNotes({ layerType, unitHeight, instruments }: Prop
 
       // console.log(`timelinePosition: ${timelinePosition}, pitchPosition: ${pitchPosition}`);
     },
-    [scrollX, unitHeight]
+    [scrollLeft, unitHeight]
   );
 
   return (
@@ -90,7 +90,13 @@ export default function RegionNotes({ layerType, unitHeight, instruments }: Prop
       tabIndex={0}
     >
       {events.map(({ x, y }, index) => (
-        <FlexNote key={index} x={x - scrollX} y={y} layerType={layerType} unitHeight={unitHeight} />
+        <FlexNote
+          key={index}
+          x={x - scrollLeft}
+          y={y}
+          layerType={layerType}
+          unitHeight={unitHeight}
+        />
       ))}
     </div>
   );

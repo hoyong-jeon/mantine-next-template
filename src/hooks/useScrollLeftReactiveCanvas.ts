@@ -1,16 +1,16 @@
-import { scrollXState } from '@atoms/scroll';
+import { scrollLeftState } from '@atoms/scroll';
 import { useEffect, useRef } from 'react';
 import { useRecoilValue } from 'recoil';
 
 type OnDraw = (
   context: CanvasRenderingContext2D,
   canvas: HTMLCanvasElement,
-  scrollX: number
+  scrollLeft: number
 ) => void;
 
-export default function useScrollXReactiveCanvas(onDraw: OnDraw) {
+export default function useScrollLeftReactiveCanvas(onDraw: OnDraw) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  const scrollX = useRecoilValue(scrollXState);
+  const scrollLeft = useRecoilValue(scrollLeftState);
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -36,17 +36,17 @@ export default function useScrollXReactiveCanvas(onDraw: OnDraw) {
     };
 
     setCanvas();
-    onDraw(context, canvas, scrollX);
+    onDraw(context, canvas, scrollLeft);
 
     const handleResize = () => {
       setCanvas();
-      onDraw(context, canvas, scrollX);
+      onDraw(context, canvas, scrollLeft);
     };
 
     window.addEventListener('resize', handleResize);
     // eslint-disable-next-line consistent-return
     return () => window.removeEventListener('resize', handleResize);
-  }, [scrollX, onDraw]);
+  }, [scrollLeft, onDraw]);
 
   return canvasRef;
 }

@@ -23,11 +23,11 @@ const useStyles = createStyles((theme) => ({
 }));
 
 interface Props {
-  scrollX: number;
-  onScrollX: (scrollX: number) => void;
+  scrollLeft: number;
+  onScrollX: (scrollLeft: number) => void;
 }
 
-export default function CompositionFooter({ scrollX, onScrollX }: Props) {
+export default function CompositionFooter({ scrollLeft, onScrollX }: Props) {
   const { classes } = useStyles();
   const scrollBarRef = React.useRef<HTMLDivElement | null>(null);
 
@@ -51,9 +51,9 @@ export default function CompositionFooter({ scrollX, onScrollX }: Props) {
     const scrollBar = scrollBarRef.current;
 
     if (scrollBar) {
-      scrollBar.scrollLeft = scrollX;
+      scrollBar.scrollLeft = scrollLeft;
     }
-  }, [scrollX]);
+  }, [scrollLeft]);
 
   return (
     <div className={classes.compositionFooter}>

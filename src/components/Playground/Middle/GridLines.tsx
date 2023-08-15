@@ -1,7 +1,7 @@
 import React from 'react';
 import { createStyles, useMantineTheme } from '@mantine/core';
 // eslint-disable-next-line import/extensions
-import useScrollXReactiveCanvas from '@hooks/useScrollXReactiveCanvas';
+import useScrollLeftReactiveCanvas from '@hooks/useScrollLeftReactiveCanvas';
 
 const useStyles = createStyles(() => ({
   canvas: {
@@ -27,7 +27,7 @@ export default function GridLines({ numUnits, unitHeight, highlightColor }: Prop
   const theme = useMantineTheme();
 
   const onDraw = React.useCallback(
-    (context: CanvasRenderingContext2D, canvas: HTMLCanvasElement, scrollX: number) => {
+    (context: CanvasRenderingContext2D, canvas: HTMLCanvasElement, scrollLeft: number) => {
       const laneWidth = canvas.clientWidth;
       const laneColors = [theme.colors.gray[3], theme.colors.gray[4]];
 
@@ -51,7 +51,7 @@ export default function GridLines({ numUnits, unitHeight, highlightColor }: Prop
       const numLines = Math.ceil(canvas.clientWidth / gap) + 1;
 
       for (let i = 0; i < numLines; i += 1) {
-        const x = i * gap - (scrollX % gap);
+        const x = i * gap - (scrollLeft % gap);
         context.beginPath();
         context.moveTo(x, 0);
         context.lineTo(x, canvas.clientHeight);
@@ -67,7 +67,7 @@ export default function GridLines({ numUnits, unitHeight, highlightColor }: Prop
     [highlightColor]
   );
 
-  const canvasRef = useScrollXReactiveCanvas(onDraw);
+  const canvasRef = useScrollLeftReactiveCanvas(onDraw);
 
   return <canvas className={classes.canvas} ref={canvasRef} />;
 }
