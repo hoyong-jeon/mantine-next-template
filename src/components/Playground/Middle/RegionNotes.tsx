@@ -22,8 +22,10 @@ const useStyles = createStyles(() => ({
 }));
 
 interface Event {
+  id: string;
   left: number;
   top: number;
+  steps: number;
   event: SynthEvent | PlayerEvent;
 }
 
@@ -39,10 +41,13 @@ export default function RegionNotes({ layerType, unitHeight, instruments }: Prop
 
   //   const [coords, setCoords] = React.useState<{ x: number; y: number }[]>([]);
   const [events, setEvents] = React.useState<Event[]>([]);
+  const [isResizing, setIsResizing] = React.useState(false);
+  const [isDragging, setIsDragging] = React.useState(false);
 
   const regionNotesRef = React.useRef<HTMLDivElement>(null);
+  const noteIdRef = React.useRef(0);
 
-  const handleClickRegionNotes = React.useCallback(
+  const handleMouseDownRegionNotes = React.useCallback(
     (event: React.MouseEvent<HTMLDivElement>) => {
       const regionNotes = regionNotesRef.current;
       if (!regionNotes) return;
@@ -60,8 +65,10 @@ export default function RegionNotes({ layerType, unitHeight, instruments }: Prop
       const inst = instruments[pitchPosition];
 
       const newEvent: Event = {
+        id: `${layerType}-${noteIdRef.current}`,
         left: snapLeft,
         top: snapTop,
+        steps: 1,
         event:
           layerType === 'melody'
             ? new SynthEvent(inst.player, timelinePosition, {
@@ -74,29 +81,91 @@ export default function RegionNotes({ layerType, unitHeight, instruments }: Prop
       };
 
       setEvents((prev) => [...prev, newEvent]);
+      noteIdRef.current += 1;
 
       // console.log(`timelinePosition: ${timelinePosition}, pitchPosition: ${pitchPosition}`);
     },
     [scrollLeft, unitHeight]
   );
 
+  const handleEditNote = React.useCallback(
+    (id: string, nextLeft: number, nextTop: number, nextSteps: number) => {
+      setEvents((prev) =>
+        prev.map((e) => {
+          if (e.id === id) {
+            const nextEvent = {
+              ...e,
+              left: nextLeft,
+              top: nextTop,
+              steps: nextSteps,
+            };
+            console.log(nextEvent);
+
+            return nextEvent;
+
+            // e.event.update({
+            //   start: Math.floor(e.left / STEP_WIDTH),
+            //   duration: nextSteps,
+            // });
+          }
+          return e;
+        })
+      );
+    },
+    []
+  );
+
+  const handleDeleteNote = React.useCallback(
+    (id: string) => {
+      setEvents((prev) => prev.filter((e) => e.id !== id));
+    },
+    [setEvents]
+  );
+
+  const handleResizeNote = (resizing: boolean) => setIsResizing(resizing);
+  const handleDragNote = (dragging: boolean) => setIsDragging(dragging);
+
+  React.useEffect(() => {
+    const regionNotes = regionNotesRef.current;
+    if (!regionNotes) return;
+
+    if (isResizing) {
+      regionNotes.style.cursor = 'col-resize';
+    } else {
+      regionNotes.style.cursor = 'pointer';
+    }
+  }, [isResizing]);
+
+  React.useEffect(() => {
+    const regionNotes = regionNotesRef.current;
+    if (!regionNotes) return;
+
+    if (isDragging) {
+      regionNotes.style.cursor = 'grabbing';
+    } else {
+      regionNotes.style.cursor = 'pointer';
+    }
+  }, [isDragging]);
+
   return (
     <div
       className={classes.regionNotes}
       ref={regionNotesRef}
-      onClick={handleClickRegionNotes}
-      onKeyDown={() => {}}
-      role="button"
-      tabIndex={0}
+      onMouseDown={handleMouseDownRegionNotes}
     >
-      {events.map(({ left, top }, index) => (
+      {events.map(({ id, left, top, steps }, index) => (
         <FlexNote
           key={index}
+          id={id}
           left={left - scrollLeft}
           top={top}
+          steps={steps}
           layerType={layerType}
           unitHeight={unitHeight}
-          onEditNote={() => {}}
+          onResizeNote={handleResizeNote}
+          onDragNote={handleDragNote}
+          onEditNote={handleEditNote}
+          onDeleteNote={handleDeleteNote}
         />
       ))}
     </div>

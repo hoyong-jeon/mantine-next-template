@@ -43,7 +43,6 @@ export default function CompositionFooter({ scrollLeft, onScrollX }: Props) {
 
     scrollBar.addEventListener('scroll', handleScroll);
 
-    // eslint-disable-next-line consistent-return
     return () => scrollBar.removeEventListener('scroll', handleScroll);
   }, [onScrollX]);
 

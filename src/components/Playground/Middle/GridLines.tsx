@@ -1,6 +1,5 @@
 import React from 'react';
 import { createStyles, useMantineTheme } from '@mantine/core';
-// eslint-disable-next-line import/extensions
 import useScrollLeftReactiveCanvas from '@hooks/useScrollLeftReactiveCanvas';
 
 const useStyles = createStyles(() => ({

@@ -1,6 +1,7 @@
 // time is in seconds
 
 export const STEP_WIDTH = 20;
+export const NOTE_HEAD_WIDTH = 8;
 export const BPM = 80;
 export const STEPS_PER_BEAT = 4;
 export const TOTAL_TIME = 60;

@@ -17,5 +17,9 @@ module.exports = {
   },
   rules: {
     'react/react-in-jsx-scope': 'off',
+    'jsx-a11y/non-interactive-element-interactions': 'off',
+    'jsx-a11y/no-static-element-interactions': 'off',
+    'jsx-a11y/click-events-have-key-events': 'off',
+    'consistent-return': 'off',
   },
 };
