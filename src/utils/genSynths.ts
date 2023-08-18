@@ -21,7 +21,7 @@ export default function genSynths(
     return {
       name: note,
       player: synth,
-      playFn: () => synth.triggerAttackRelease(note, '8n'),
+      playFn: () => synth.triggerAttackRelease(note, '16n'),
     };
   });
 }

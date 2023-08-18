@@ -4,6 +4,7 @@ import { useRecoilValue } from 'recoil';
 import { scrollLeftState } from '@atoms/scroll';
 import { STEP_WIDTH } from '@constants/editor';
 import { LayerType } from '@customTypes/editor';
+import { Synth, Player } from 'tone';
 import PlayerEvent from './PlayerEvent';
 import SynthEvent from './SynthEvent';
 import FlexNote from './FlexNote';
@@ -75,9 +76,7 @@ export default function RegionNotes({ layerType, unitHeight, instruments }: Prop
                 duration: 1,
                 note: inst.name,
               })
-            : new PlayerEvent(inst.player, timelinePosition, {
-                duration: 1,
-              }),
+            : new PlayerEvent(inst.player, timelinePosition),
       };
 
       setEvents((prev) => [...prev, newEvent]);
@@ -90,23 +89,31 @@ export default function RegionNotes({ layerType, unitHeight, instruments }: Prop
 
   const handleEditNote = React.useCallback(
     (id: string, nextLeft: number, nextTop: number, nextSteps: number) => {
+      const absoluteLeft = nextLeft + scrollLeft;
+      const timelinePosition = Math.floor(absoluteLeft / STEP_WIDTH);
+      const pitchPosition = Math.floor(nextTop / unitHeight);
+      const inst = instruments[pitchPosition];
+
       setEvents((prev) =>
         prev.map((e) => {
           if (e.id === id) {
+            if (e.event instanceof SynthEvent) {
+              e.event.update(inst.player as Synth, timelinePosition, {
+                duration: nextSteps,
+                note: inst.name,
+              });
+            } else if (e.event instanceof PlayerEvent) {
+              e.event.update(inst.player as Player, timelinePosition);
+            }
+
             const nextEvent = {
               ...e,
               left: nextLeft,
               top: nextTop,
               steps: nextSteps,
             };
-            console.log(nextEvent);
 
             return nextEvent;
-
-            // e.event.update({
-            //   start: Math.floor(e.left / STEP_WIDTH),
-            //   duration: nextSteps,
-            // });
           }
           return e;
         })

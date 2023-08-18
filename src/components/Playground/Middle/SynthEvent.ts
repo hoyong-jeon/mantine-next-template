@@ -10,14 +10,9 @@ export default class SynthEvent {
   event: ToneEvent;
   instrument: Synth;
 
-  constructor(
-    instrument: Synth,
-    startTime: number,
-    value: Value = { note: 'C4', duration: TIME_PER_STEP }
-  ) {
+  constructor(instrument: Synth, startStep: number, value: Value) {
     this.instrument = instrument;
-    // this.instrument.toDestination();
-    console.log(this.instrument);
+    // console.log(this.instrument);
     this.instrument.triggerAttackRelease(value.note, '16n');
 
     this.event = new ToneEvent<Value>();
@@ -25,11 +20,20 @@ export default class SynthEvent {
     this.event.callback = (time, v) => {
       this.instrument.triggerAttackRelease(v.note, v.duration * TIME_PER_STEP, time);
     };
-    this.event.start(startTime * TIME_PER_STEP);
+    this.event.start(startStep * TIME_PER_STEP);
   }
 
-  edit(startTime: number, value: Value) {
+  update(instrument: Synth, startStep: number, value: Value) {
+    this.instrument = instrument;
+
+    this.event.dispose();
+    this.event = new ToneEvent<Value>();
     this.event.value = value;
-    this.event.start(startTime);
+
+    this.event.callback = (time, v) => {
+      this.instrument.triggerAttackRelease(v.note, v.duration * TIME_PER_STEP, time);
+    };
+    this.event.value = value;
+    this.event.start(startStep * TIME_PER_STEP);
   }
 }
