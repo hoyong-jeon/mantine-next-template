@@ -36,4 +36,8 @@ export default class SynthEvent {
     this.event.value = value;
     this.event.start(startStep * TIME_PER_STEP);
   }
+
+  delete() {
+    this.event.dispose();
+  }
 }

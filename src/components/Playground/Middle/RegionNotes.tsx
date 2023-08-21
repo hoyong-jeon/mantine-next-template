@@ -124,7 +124,15 @@ export default function RegionNotes({ layerType, unitHeight, instruments }: Prop
 
   const handleDeleteNote = React.useCallback(
     (id: string) => {
-      setEvents((prev) => prev.filter((e) => e.id !== id));
+      setEvents((prev) =>
+        prev.filter((e) => {
+          if (e.id === id) {
+            e.event.delete();
+            return false;
+          }
+          return true;
+        })
+      );
     },
     [setEvents]
   );

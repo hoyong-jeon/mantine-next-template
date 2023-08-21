@@ -27,4 +27,8 @@ export default class PlayerEvent {
     };
     this.event.start(startStep * TIME_PER_STEP);
   }
+
+  delete() {
+    this.event.dispose();
+  }
 }
