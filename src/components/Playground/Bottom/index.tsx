@@ -5,6 +5,8 @@ import {
   IconPlayerPauseFilled,
   IconPlayerStopFilled,
 } from '@tabler/icons-react';
+import { useRecoilValue } from 'recoil';
+import { playState as playStateAtom } from '@atoms/play';
 import Timer from './Timer';
 
 const useStyles = createStyles((theme) => ({
@@ -23,26 +25,25 @@ const useStyles = createStyles((theme) => ({
 }));
 
 interface Props {
-  isPlaying: boolean;
-  isStopped: boolean;
   onTogglePlay: () => void;
   onStop: () => void;
 }
 
-export default function Bottom({ isPlaying, isStopped, onTogglePlay, onStop }: Props) {
+export default function Bottom({ onTogglePlay, onStop }: Props) {
   const { classes } = useStyles();
+  const playState = useRecoilValue(playStateAtom);
 
   return (
     <div className={classes.bottom}>
       <div className={classes.controls}>
         <ActionIcon onClick={onTogglePlay} variant="filled" radius="xl" color="teal.8" size="xl">
-          {!isPlaying ? <IconPlayerPlayFilled /> : <IconPlayerPauseFilled />}
+          {playState !== 'playing' ? <IconPlayerPlayFilled /> : <IconPlayerPauseFilled />}
         </ActionIcon>
         <ActionIcon onClick={onStop} variant="outline" radius="xl" color="gray.6" size="xl">
           <IconPlayerStopFilled />
         </ActionIcon>
       </div>
-      <Timer isPlaying={isPlaying} isStopped={isStopped} />
+      <Timer isPlaying={playState === 'playing'} isStopped={playState === 'stopped'} />
     </div>
   );
 }

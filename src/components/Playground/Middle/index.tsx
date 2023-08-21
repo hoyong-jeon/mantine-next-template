@@ -2,8 +2,6 @@ import React from 'react';
 import { createStyles, Select, Slider, ThemeIcon, useMantineTheme } from '@mantine/core';
 import SplitPane, { Pane } from 'split-pane-react';
 import { IconPiano } from '@tabler/icons-react';
-import { useRecoilState } from 'recoil';
-import { scrollLeftState } from '@atoms/scroll';
 import { LayerType } from '@customTypes/editor';
 import MiddleHeader from './MiddleHeader';
 import CompositionFooter from './CompositionFooter';
@@ -52,12 +50,11 @@ const useStyles = createStyles((theme) => ({
 }));
 
 interface Props {
-  isPlaying: boolean;
   piano: any[];
   drumkit: any[];
 }
 
-export default function Middle({ isPlaying, piano, drumkit }: Props) {
+export default function Middle({ piano, drumkit }: Props) {
   const { classes } = useStyles();
   const theme = useMantineTheme();
 
@@ -72,24 +69,11 @@ export default function Middle({ isPlaying, piano, drumkit }: Props) {
   };
 
   const [sizes, setSizes] = React.useState<(number | string)[]>(['50%', '50%']);
-  const [scrollLeft, setScrollX] = useRecoilState(scrollLeftState);
-
-  const handleScrollX = (scrollValue: number) => {
-    setScrollX(scrollValue);
-  };
-
-  const handleEqualizePane = () => {
-    setSizes(['50%', '50%']);
-  };
+  const handleEqualizePane = () => setSizes(['50%', '50%']);
 
   return (
     <div className={classes.mid}>
-      <MiddleHeader
-        scrollLeft={scrollLeft}
-        isPlaying={isPlaying}
-        onClickEqualizer={handleEqualizePane}
-        onScrollX={handleScrollX}
-      />
+      <MiddleHeader onClickEqualizer={handleEqualizePane} />
       <div className={classes.compositionArea}>
         <SplitPane
           split="horizontal"
@@ -191,7 +175,7 @@ export default function Middle({ isPlaying, piano, drumkit }: Props) {
           </Pane>
         </SplitPane>
       </div>
-      <CompositionFooter scrollLeft={scrollLeft} onScrollX={handleScrollX} />
+      <CompositionFooter />
     </div>
   );
 }

@@ -4,6 +4,10 @@ import useScrollLeftReactiveCanvas from '@hooks/useScrollLeftReactiveCanvas';
 import { IconEqual } from '@tabler/icons-react';
 import * as Tone from 'tone';
 import { TOTAL_TIME, TOTAL_WIDTH, STEP_WIDTH, TIME_PER_STEP } from '@constants/editor';
+import { useRecoilState, useRecoilStoreID, useRecoilValue, useSetRecoilState } from 'recoil';
+import { scrollLeftState } from '@atoms/scroll';
+import { playState as playStateAtom } from '@atoms/play';
+import { timeState } from '@atoms/time';
 
 const useStyles = createStyles((theme) => ({
   middleHeader: {
@@ -103,22 +107,18 @@ const useStyles = createStyles((theme) => ({
 }));
 
 interface Props {
-  scrollLeft: number;
-  isPlaying: boolean;
   onClickEqualizer: () => void;
-  onScrollX: (scrollLeft: number) => void;
 }
 
-export default function MiddleHeader({
-  scrollLeft,
-  isPlaying,
-  onClickEqualizer,
-  onScrollX,
-}: Props) {
+export default function MiddleHeader({ onClickEqualizer }: Props) {
   const { classes } = useStyles();
 
   const beatRulerRef = React.useRef<HTMLDivElement>(null);
   const playheadRef = React.useRef<HTMLDivElement>(null);
+
+  const [scrollLeft, setScrollLeft] = useRecoilState(scrollLeftState);
+  const playState = useRecoilValue(playStateAtom);
+  const setTimeState = useSetRecoilState(timeState);
 
   const onDraw = React.useCallback(
     (context: CanvasRenderingContext2D, canvas: HTMLCanvasElement) => {
@@ -171,15 +171,16 @@ export default function MiddleHeader({
       playhead.style.transform = `translateX(${relativePosition}px)`;
 
       // Scroll to playhead if it's near the edge, only if playing
-      if (relativePosition > beatRuler.clientWidth - 50 && isPlaying) {
-        onScrollX(scrollLeft + (beatRuler.clientWidth - 100));
+      if (relativePosition > beatRuler.clientWidth - 50 && playState === 'playing') {
+        setScrollLeft(scrollLeft + (beatRuler.clientWidth - 100));
       }
     }
-  }, [scrollLeft, isPlaying]);
+  }, [scrollLeft, playState, setScrollLeft]);
 
   const goToTime = (timelinePosition: number) => {
     const time = timelinePosition * TIME_PER_STEP;
     Tone.Transport.seconds = time;
+    setTimeState(time.toFixed(1));
     updatePlayhead();
   };
 
@@ -205,19 +206,21 @@ export default function MiddleHeader({
   React.useEffect(() => {
     let animationFrameId: number;
 
-    if (isPlaying) {
+    if (playState === 'playing') {
       const loop = () => {
         updatePlayhead();
         animationFrameId = window.requestAnimationFrame(loop);
       };
 
       loop();
+    } else if (playState === 'stopped') {
+      goToTime(0);
     } else {
       updatePlayhead();
     }
 
     return () => window.cancelAnimationFrame(animationFrameId);
-  }, [scrollLeft, isPlaying]);
+  }, [scrollLeft, playState]);
 
   const canvasRef = useScrollLeftReactiveCanvas(onDraw);
 

@@ -1,6 +1,8 @@
 import React from 'react';
 import { createStyles } from '@mantine/core';
 import { TOTAL_WIDTH } from '@constants/editor';
+import { useRecoilState } from 'recoil';
+import { scrollLeftState } from '@atoms/scroll';
 
 const useStyles = createStyles((theme) => ({
   compositionFooter: {
@@ -22,14 +24,10 @@ const useStyles = createStyles((theme) => ({
   },
 }));
 
-interface Props {
-  scrollLeft: number;
-  onScrollX: (scrollLeft: number) => void;
-}
-
-export default function CompositionFooter({ scrollLeft, onScrollX }: Props) {
+export default function CompositionFooter() {
   const { classes } = useStyles();
   const scrollBarRef = React.useRef<HTMLDivElement | null>(null);
+  const [scrollLeft, setScrollLeft] = useRecoilState(scrollLeftState);
 
   React.useEffect(() => {
     const scrollBar = scrollBarRef.current;
@@ -37,14 +35,14 @@ export default function CompositionFooter({ scrollLeft, onScrollX }: Props) {
 
     const handleScroll = () => {
       if (scrollBar) {
-        onScrollX(scrollBar.scrollLeft);
+        setScrollLeft(scrollBar.scrollLeft);
       }
     };
 
     scrollBar.addEventListener('scroll', handleScroll);
 
     return () => scrollBar.removeEventListener('scroll', handleScroll);
-  }, [onScrollX]);
+  }, [scrollBarRef.current, setScrollLeft]);
 
   React.useEffect(() => {
     const scrollBar = scrollBarRef.current;

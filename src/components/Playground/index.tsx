@@ -1,6 +1,9 @@
 import React from 'react';
 import * as Tone from 'tone';
 import genSynths from '@utils/genSynths';
+import { useRecoilState, useSetRecoilState } from 'recoil';
+import { scrollLeftState } from '@atoms/scroll';
+import { playState as playStateAtom } from '@atoms/play';
 import Top from './Top';
 import Middle from './Middle';
 import Bottom from './Bottom';
@@ -11,8 +14,8 @@ interface Props {
 
 export default function Playground({ drumkit }: Props) {
   const [isInitialized, setIsInitialized] = React.useState(false);
-  const [isPlaying, setIsPlaying] = React.useState(false);
-  const [isStopped, setIsStopped] = React.useState(false);
+  const [playState, setPlayState] = useRecoilState(playStateAtom);
+  const setScrollLeftState = useSetRecoilState(scrollLeftState);
 
   const piano = genSynths();
 
@@ -22,33 +25,26 @@ export default function Playground({ drumkit }: Props) {
       Tone.start();
     }
 
-    if (!isPlaying) {
-      setIsPlaying(true);
+    if (playState === 'stopped' || playState === 'paused') {
+      setPlayState('playing');
       Tone.Transport.start();
     } else {
-      setIsPlaying(false);
+      setPlayState('paused');
       Tone.Transport.pause();
     }
-
-    setIsStopped(false);
   };
 
   const handleStop = () => {
-    setIsPlaying(false);
-    setIsStopped(true);
+    setPlayState('stopped');
+    setScrollLeftState(0);
     Tone.Transport.stop();
   };
 
   return (
     <>
       <Top />
-      <Middle piano={piano.reverse()} drumkit={drumkit} isPlaying={isPlaying} />
-      <Bottom
-        isPlaying={isPlaying}
-        isStopped={isStopped}
-        onTogglePlay={handleTogglePlay}
-        onStop={handleStop}
-      />
+      <Middle piano={piano.reverse()} drumkit={drumkit} />
+      <Bottom onTogglePlay={handleTogglePlay} onStop={handleStop} />
     </>
   );
 }
