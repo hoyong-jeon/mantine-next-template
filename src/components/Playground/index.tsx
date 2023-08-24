@@ -27,6 +27,7 @@ export default function Playground({ drumkit }: Props) {
 
     if (playState === 'stopped' || playState === 'paused') {
       setPlayState('playing');
+      console.log(Tone.Transport.bpm.get());
       Tone.Transport.start();
     } else {
       setPlayState('paused');

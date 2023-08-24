@@ -123,7 +123,7 @@ export default function MiddleHeader({ onClickEqualizer }: Props) {
   const onDraw = React.useCallback(
     (context: CanvasRenderingContext2D, canvas: HTMLCanvasElement) => {
       // Draw grid lines
-      const gap = 20;
+      const gap = 20; // RULER_GAP
       const numLines = Math.ceil(canvas.clientWidth / gap) + 1;
 
       for (let i = 0; i < numLines; i += 1) {
@@ -134,6 +134,7 @@ export default function MiddleHeader({ onClickEqualizer }: Props) {
         const mark = Math.floor((i * gap + scrollLeft) / gap);
 
         if (mark % 4 === 0) {
+          // numer state
           context.moveTo(x, 0);
           context.lineTo(x, canvas.clientHeight);
           context.strokeStyle = '#fff';
