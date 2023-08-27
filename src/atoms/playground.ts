@@ -1,3 +1,4 @@
+import { Denominator, Numerator, Resolution } from '@customTypes/playground';
 import { atom, selector } from 'recoil';
 
 type PlayState = 'playing' | 'paused' | 'stopped';
@@ -22,15 +23,10 @@ export const bpmState = atom({
   default: 120,
 });
 
-type ResolutionState = '16n' | '8n' | '4n';
-
-export const resolutionState = atom<ResolutionState>({
+export const resolutionState = atom<Resolution>({
   key: 'resolutionState',
   default: '8n',
 });
-
-type Numerator = '6' | '3';
-type Denominator = '16' | '8' | '4';
 
 export const numerState = atom<Numerator>({
   key: 'numerState',
@@ -42,16 +38,6 @@ export const denomState = atom<Denominator>({
   default: '8',
 });
 
-const NOTE_WIDTH: Record<ResolutionState, number> = {
-  '16n': 20,
-  '8n': 40,
-  '4n': 80,
-};
-
-const RULER_GAP: Record<Denominator, number> = {
-  '16': 20,
-  '8': 40,
-  '4': 80,
-};
-
-const STEPS_PER_QUARTER = 4;
+// export const TIME_PER_STEP = TOTAL_TIME / (STEPS_PER_BEAT * BPM);
+// export const TOTAL_STEPS = (TOTAL_TIME / 60) * STEPS_PER_BEAT * BPM;
+// export const TOTAL_WIDTH = TOTAL_STEPS * STEP_WIDTH; // 20

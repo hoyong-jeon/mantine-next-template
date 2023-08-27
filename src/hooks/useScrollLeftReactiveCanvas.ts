@@ -1,4 +1,4 @@
-import { scrollLeftState } from '@atoms/scroll';
+import { scrollLeftState } from '@atoms/playground';
 import { useEffect, useRef } from 'react';
 import { useRecoilValue } from 'recoil';
 

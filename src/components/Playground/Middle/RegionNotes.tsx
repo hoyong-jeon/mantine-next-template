@@ -1,7 +1,7 @@
 import React from 'react';
 import { createStyles } from '@mantine/core';
 import { useRecoilValue } from 'recoil';
-import { scrollLeftState } from '@atoms/scroll';
+import { scrollLeftState } from '@atoms/playground';
 import { STEP_WIDTH } from '@constants/editor';
 import { LayerType } from '@customTypes/editor';
 import { Synth, Player } from 'tone';

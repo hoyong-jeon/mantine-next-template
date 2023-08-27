@@ -4,10 +4,8 @@ import useScrollLeftReactiveCanvas from '@hooks/useScrollLeftReactiveCanvas';
 import { IconEqual } from '@tabler/icons-react';
 import * as Tone from 'tone';
 import { TOTAL_TIME, TOTAL_WIDTH, STEP_WIDTH, TIME_PER_STEP } from '@constants/editor';
-import { useRecoilState, useRecoilStoreID, useRecoilValue, useSetRecoilState } from 'recoil';
-import { scrollLeftState } from '@atoms/scroll';
-import { playState as playStateAtom } from '@atoms/play';
-import { timeState } from '@atoms/time';
+import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
+import { timeState, playState as playStateAtom, scrollLeftState } from '@atoms/playground';
 
 const useStyles = createStyles((theme) => ({
   middleHeader: {

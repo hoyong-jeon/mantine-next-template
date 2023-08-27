@@ -2,7 +2,7 @@ import React from 'react';
 import { createStyles } from '@mantine/core';
 import { TOTAL_WIDTH } from '@constants/editor';
 import { useRecoilState } from 'recoil';
-import { scrollLeftState } from '@atoms/scroll';
+import { scrollLeftState } from '@atoms/playground';
 
 const useStyles = createStyles((theme) => ({
   compositionFooter: {

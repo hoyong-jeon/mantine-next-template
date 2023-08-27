@@ -2,7 +2,7 @@ import React from 'react';
 import { createStyles } from '@mantine/core';
 import { useRecoilState } from 'recoil';
 import * as Tone from 'tone';
-import { timeState } from '@atoms/time';
+import { timeState } from '@atoms/playground';
 
 const useStyles = createStyles(() => ({
   timer: {
