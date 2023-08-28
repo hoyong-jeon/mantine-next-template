@@ -1,5 +1,4 @@
-import { ToneEvent, Synth } from 'tone';
-import { TIME_PER_STEP } from '@constants/editor';
+import { ToneEvent, Synth, Time } from 'tone';
 
 interface Value {
   note: string;
@@ -18,9 +17,9 @@ export default class SynthEvent {
     this.event = new ToneEvent<Value>();
     this.event.value = value;
     this.event.callback = (time, v) => {
-      this.instrument.triggerAttackRelease(v.note, v.duration * TIME_PER_STEP, time);
+      this.instrument.triggerAttackRelease(v.note, v.duration * Time('16n').toSeconds(), time);
     };
-    this.event.start(startStep * TIME_PER_STEP);
+    this.event.start(startStep * Time('16n').toSeconds());
   }
 
   update(instrument: Synth, startStep: number, value: Value) {
@@ -31,10 +30,10 @@ export default class SynthEvent {
     this.event.value = value;
 
     this.event.callback = (time, v) => {
-      this.instrument.triggerAttackRelease(v.note, v.duration * TIME_PER_STEP, time);
+      this.instrument.triggerAttackRelease(v.note, v.duration * Time('16n').toSeconds(), time);
     };
     this.event.value = value;
-    this.event.start(startStep * TIME_PER_STEP);
+    this.event.start(startStep * Time('16n').toSeconds());
   }
 
   delete() {

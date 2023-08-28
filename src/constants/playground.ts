@@ -7,6 +7,7 @@ export const NOTE_WIDTH = {
   '8n': 40,
   '4n': 80,
 } as const;
+export const NOTE_HEAD_WIDTH = 8;
 
 export const RULER_GAP = {
   '16': 20,
@@ -14,6 +15,7 @@ export const RULER_GAP = {
   '4': 80,
 } as const;
 
+export const STEP_WIDTH = NOTE_WIDTH['16n'];
 export const STEPS_PER_QUARTER = 4;
 
 export const TOTAL_WIDTH = NOTE_WIDTH['16n'] * 600; // 120000

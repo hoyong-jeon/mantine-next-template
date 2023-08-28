@@ -1,7 +1,9 @@
 import React from 'react';
 import { createStyles } from '@mantine/core';
 import { LayerType } from '@customTypes/editor';
-import { STEP_WIDTH, NOTE_HEAD_WIDTH } from '@constants/editor';
+import { STEP_WIDTH, NOTE_HEAD_WIDTH } from '@constants/playground';
+import { resolutionState } from '@atoms/playground';
+import { useRecoilValue } from 'recoil';
 
 interface StylesProps {
   unitHeight: number;
@@ -59,6 +61,7 @@ export default function FlexNote({
 }: Props) {
   const { classes, cx } = useStyles({ unitHeight, layerType });
   const [selected, setSelected] = React.useState(false);
+  const resolution = useRecoilValue(resolutionState);
 
   const handleMouseDownHead = React.useCallback(
     (e: React.MouseEvent<HTMLDivElement>) => {
@@ -85,7 +88,7 @@ export default function FlexNote({
       document.addEventListener('mousemove', handleMouseMove);
       document.addEventListener('mouseup', handleMouseUp);
     },
-    [onEditNote, id, steps, left, top]
+    [onEditNote, id, steps, left, top, resolution]
   );
 
   const handleMouseDownContainer = React.useCallback(
@@ -119,12 +122,12 @@ export default function FlexNote({
       document.addEventListener('mousemove', handleMouseMove);
       document.addEventListener('mouseup', handleMouseUp);
     },
-    [onEditNote, id, left, steps, top, unitHeight]
+    [onEditNote, id, left, steps, top, unitHeight, resolution]
   );
 
   const handleDoubleClick = React.useCallback(() => {
     onDeleteNote(id);
-  }, [onDeleteNote, id]);
+  }, [onDeleteNote, id, resolution]);
 
   return (
     <div

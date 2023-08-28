@@ -17,10 +17,11 @@ import {
   IconPlayerStopFilled,
 } from '@tabler/icons-react';
 import { useRecoilState, useRecoilValue } from 'recoil';
-import { playState, bpmState, numerState, denomState, resolutionState } from '@atoms/playground';
+import { playState, numerState, denomState, resolutionState, bpmState } from '@atoms/playground';
 import Timer from './Timer';
 import { Denominators, Numerators, Resolutions } from '@constants/playground';
 import type { Denominator, Numerator, Resolution } from '@customTypes/playground';
+import * as Tone from 'tone';
 
 const useStyles = createStyles((theme) => ({
   bottom: {
@@ -46,10 +47,16 @@ interface Props {
 export default function Bottom({ onTogglePlay, onStop }: Props) {
   const { classes } = useStyles();
   const play = useRecoilValue(playState);
-  const [bpm, setBpm] = useRecoilState(bpmState);
+
   const [numer, setNumer] = useRecoilState(numerState);
   const [denom, setDenom] = useRecoilState(denomState);
   const [resolution, setResolution] = useRecoilState(resolutionState);
+  const [bpm, setBpm] = useRecoilState(bpmState);
+
+  const handleChangeBpm = (v: number) => {
+    Tone.Transport.bpm.value = v;
+    setBpm(v);
+  };
 
   return (
     <div className={classes.bottom}>
@@ -106,7 +113,7 @@ export default function Bottom({ onTogglePlay, onStop }: Props) {
           <Divider orientation="vertical" />
           <Group>
             <Text>BPM:</Text>
-            <NumberInput placeholder="bpm" onChange={(v: number) => setBpm(v)} value={bpm} />
+            <NumberInput placeholder="bpm" onChange={handleChangeBpm} value={bpm} />
           </Group>
         </Group>
       </Group>

@@ -1,5 +1,4 @@
-import { ToneEvent, Player } from 'tone';
-import { TIME_PER_STEP } from '@constants/editor';
+import { ToneEvent, Player, Time } from 'tone';
 
 export default class PlayerEvent {
   event: ToneEvent;
@@ -14,7 +13,7 @@ export default class PlayerEvent {
     this.event.callback = () => {
       this.instrument.start();
     };
-    this.event.start(startStep * TIME_PER_STEP);
+    this.event.start(startStep * Time('16n').toSeconds());
   }
 
   update(instrument: Player, startStep: number) {
@@ -25,7 +24,7 @@ export default class PlayerEvent {
     this.event.callback = () => {
       this.instrument.start();
     };
-    this.event.start(startStep * TIME_PER_STEP);
+    this.event.start(startStep * Time('16n').toSeconds());
   }
 
   delete() {

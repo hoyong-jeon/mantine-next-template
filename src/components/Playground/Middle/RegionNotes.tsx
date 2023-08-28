@@ -1,8 +1,8 @@
 import React from 'react';
 import { createStyles } from '@mantine/core';
 import { useRecoilValue } from 'recoil';
-import { scrollLeftState } from '@atoms/playground';
-import { STEP_WIDTH } from '@constants/editor';
+import { scrollLeftState, resolutionState } from '@atoms/playground';
+import { NOTE_WIDTH, STEP_WIDTH } from '@constants/playground';
 import { LayerType } from '@customTypes/editor';
 import { Synth, Player } from 'tone';
 import PlayerEvent from './PlayerEvent';
@@ -39,6 +39,7 @@ interface Props {
 export default function RegionNotes({ layerType, unitHeight, instruments }: Props) {
   const { classes } = useStyles();
   const scrollLeft = useRecoilValue(scrollLeftState);
+  const resolution = useRecoilValue(resolutionState);
 
   //   const [coords, setCoords] = React.useState<{ x: number; y: number }[]>([]);
   const [events, setEvents] = React.useState<Event[]>([]);
@@ -69,11 +70,11 @@ export default function RegionNotes({ layerType, unitHeight, instruments }: Prop
         id: `${layerType}-${noteIdRef.current}`,
         left: snapLeft,
         top: snapTop,
-        steps: 1,
+        steps: STEP_WIDTH / STEP_WIDTH,
         event:
           layerType === 'melody'
             ? new SynthEvent(inst.player, timelinePosition, {
-                duration: 1,
+                duration: STEP_WIDTH / STEP_WIDTH,
                 note: inst.name,
               })
             : new PlayerEvent(inst.player, timelinePosition),
@@ -84,7 +85,7 @@ export default function RegionNotes({ layerType, unitHeight, instruments }: Prop
 
       // console.log(`timelinePosition: ${timelinePosition}, pitchPosition: ${pitchPosition}`);
     },
-    [scrollLeft, unitHeight]
+    [scrollLeft, unitHeight, resolution]
   );
 
   const handleEditNote = React.useCallback(
@@ -119,7 +120,7 @@ export default function RegionNotes({ layerType, unitHeight, instruments }: Prop
         })
       );
     },
-    []
+    [resolution]
   );
 
   const handleDeleteNote = React.useCallback(

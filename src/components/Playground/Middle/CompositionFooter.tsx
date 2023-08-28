@@ -1,6 +1,6 @@
 import React from 'react';
 import { createStyles } from '@mantine/core';
-import { TOTAL_WIDTH } from '@constants/editor';
+import { TOTAL_WIDTH } from '@constants/playground';
 import { useRecoilState } from 'recoil';
 import { scrollLeftState } from '@atoms/playground';
 

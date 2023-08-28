@@ -3,9 +3,15 @@ import { createStyles, Button, ActionIcon } from '@mantine/core';
 import useScrollLeftReactiveCanvas from '@hooks/useScrollLeftReactiveCanvas';
 import { IconEqual } from '@tabler/icons-react';
 import * as Tone from 'tone';
-import { TOTAL_TIME, TOTAL_WIDTH, STEP_WIDTH, TIME_PER_STEP } from '@constants/editor';
+import { TOTAL_WIDTH, STEP_WIDTH } from '@constants/playground';
 import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
-import { timeState, playState as playStateAtom, scrollLeftState } from '@atoms/playground';
+import {
+  timeState,
+  playState as playStateAtom,
+  scrollLeftState,
+  resolutionState,
+  bpmState,
+} from '@atoms/playground';
 
 const useStyles = createStyles((theme) => ({
   middleHeader: {
@@ -115,8 +121,9 @@ export default function MiddleHeader({ onClickEqualizer }: Props) {
   const playheadRef = React.useRef<HTMLDivElement>(null);
 
   const [scrollLeft, setScrollLeft] = useRecoilState(scrollLeftState);
-  const playState = useRecoilValue(playStateAtom);
   const setTimeState = useSetRecoilState(timeState);
+  const playState = useRecoilValue(playStateAtom);
+  const bpm = useRecoilValue(bpmState);
 
   const onDraw = React.useCallback(
     (context: CanvasRenderingContext2D, canvas: HTMLCanvasElement) => {
@@ -159,7 +166,7 @@ export default function MiddleHeader({ onClickEqualizer }: Props) {
     if (!playhead || !beatRuler) return;
 
     const currentTime = Tone.Transport.seconds;
-    const totalTime = TOTAL_TIME;
+    const totalTime = (1 / ((bpm * 4) / 60)) * 600;
     const absolutePosition = (currentTime / totalTime) * TOTAL_WIDTH;
 
     const relativePosition = absolutePosition - scrollLeft;
@@ -174,14 +181,14 @@ export default function MiddleHeader({ onClickEqualizer }: Props) {
         setScrollLeft(scrollLeft + (beatRuler.clientWidth - 100));
       }
     }
-  }, [scrollLeft, playState, setScrollLeft]);
+  }, [scrollLeft, playState, setScrollLeft, bpm]);
 
-  const goToTime = (timelinePosition: number) => {
-    const time = timelinePosition * TIME_PER_STEP;
+  const goToTime = React.useCallback((timelinePosition: number) => {
+    const time = timelinePosition * Tone.Time('16n').toSeconds();
     Tone.Transport.seconds = time;
     setTimeState(time.toFixed(1));
     updatePlayhead();
-  };
+  }, []);
 
   const handleClickRuler = React.useCallback(
     (event: React.MouseEvent<HTMLDivElement>) => {
@@ -192,7 +199,7 @@ export default function MiddleHeader({ onClickEqualizer }: Props) {
       const offsetX = event.clientX - beatRuler.getBoundingClientRect().left;
       // absolute position of mouse click
       const absolutePosition = offsetX + scrollLeft;
-      // get timeline position based on resolution of STEP_WIDTH
+      // get timeline position
       const timelinePosition = Math.floor(absolutePosition / STEP_WIDTH);
       // get time based on timeline position
       console.log(timelinePosition);

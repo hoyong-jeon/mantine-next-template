@@ -1,3 +1,4 @@
+import { STEPS_PER_QUARTER, TOTAL_WIDTH } from '@constants/playground';
 import { Denominator, Numerator, Resolution } from '@customTypes/playground';
 import { atom, selector } from 'recoil';
 
@@ -37,7 +38,3 @@ export const denomState = atom<Denominator>({
   key: 'denomState',
   default: '8',
 });
-
-// export const TIME_PER_STEP = TOTAL_TIME / (STEPS_PER_BEAT * BPM);
-// export const TOTAL_STEPS = (TOTAL_TIME / 60) * STEPS_PER_BEAT * BPM;
-// export const TOTAL_WIDTH = TOTAL_STEPS * STEP_WIDTH; // 20
