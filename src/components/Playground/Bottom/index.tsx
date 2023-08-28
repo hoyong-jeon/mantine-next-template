@@ -50,7 +50,6 @@ export default function Bottom({ onTogglePlay, onStop }: Props) {
 
   const [numer, setNumer] = useRecoilState(numerState);
   const [denom, setDenom] = useRecoilState(denomState);
-  const [resolution, setResolution] = useRecoilState(resolutionState);
   const [bpm, setBpm] = useRecoilState(bpmState);
 
   const handleChangeBpm = (v: number) => {
@@ -72,21 +71,6 @@ export default function Bottom({ onTogglePlay, onStop }: Props) {
         <Timer isPlaying={play === 'playing'} isStopped={play === 'stopped'} />
       </Group>
       <Group position="right" spacing="lg">
-        <Group>
-          <Text>해상도:</Text>
-          <Select
-            w={80}
-            value={resolution}
-            dropdownPosition="top"
-            data={Resolutions.map((v) => ({
-              label: v,
-              value: v,
-            }))}
-            onChange={(v: Resolution) => setResolution(v)}
-          />
-        </Group>
-
-        <Divider orientation="vertical" />
         <Group>
           <Text>박자:</Text>
           <Select

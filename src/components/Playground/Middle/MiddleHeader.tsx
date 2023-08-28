@@ -3,7 +3,7 @@ import { createStyles, Button, ActionIcon } from '@mantine/core';
 import useScrollLeftReactiveCanvas from '@hooks/useScrollLeftReactiveCanvas';
 import { IconEqual } from '@tabler/icons-react';
 import * as Tone from 'tone';
-import { TOTAL_WIDTH, STEP_WIDTH } from '@constants/playground';
+import { TOTAL_WIDTH, STEP_WIDTH, RULER_GAP } from '@constants/playground';
 import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
 import {
   timeState,
@@ -11,6 +11,8 @@ import {
   scrollLeftState,
   resolutionState,
   bpmState,
+  denomState,
+  numerState,
 } from '@atoms/playground';
 
 const useStyles = createStyles((theme) => ({
@@ -125,10 +127,13 @@ export default function MiddleHeader({ onClickEqualizer }: Props) {
   const playState = useRecoilValue(playStateAtom);
   const bpm = useRecoilValue(bpmState);
 
+  const numer = useRecoilValue(numerState);
+  const denom = useRecoilValue(denomState);
+
   const onDraw = React.useCallback(
     (context: CanvasRenderingContext2D, canvas: HTMLCanvasElement) => {
       // Draw grid lines
-      const gap = 20; // RULER_GAP
+      const gap = RULER_GAP[denom];
       const numLines = Math.ceil(canvas.clientWidth / gap) + 1;
 
       for (let i = 0; i < numLines; i += 1) {
@@ -138,17 +143,17 @@ export default function MiddleHeader({ onClickEqualizer }: Props) {
         // Draw number marks
         const mark = Math.floor((i * gap + scrollLeft) / gap);
 
-        if (mark % 4 === 0) {
+        if (mark % Number(numer) === 0) {
           // numer state
           context.moveTo(x, 0);
           context.lineTo(x, canvas.clientHeight);
           context.strokeStyle = '#fff';
           context.stroke();
 
-          const step = mark;
+          const barIndicator = mark / Number(numer);
           context.fillStyle = '#fff';
           context.font = 'bold 12px sans-serif';
-          context.fillText(step.toString(), x + 4, 12); // Adjust the position as needed
+          context.fillText(barIndicator.toString(), x + 4, 12); // Adjust the position as needed
         } else {
           context.moveTo(x, canvas.clientHeight);
           context.lineTo(x, canvas.clientHeight / 2);
@@ -157,7 +162,7 @@ export default function MiddleHeader({ onClickEqualizer }: Props) {
         }
       }
     },
-    [scrollLeft]
+    [scrollLeft, denom, numer]
   );
 
   const updatePlayhead = React.useCallback(() => {

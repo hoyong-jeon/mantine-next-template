@@ -1,6 +1,9 @@
 import React from 'react';
 import { createStyles, useMantineTheme } from '@mantine/core';
 import useScrollLeftReactiveCanvas from '@hooks/useScrollLeftReactiveCanvas';
+import { useRecoilValue } from 'recoil';
+import { denomState } from '@atoms/playground';
+import { RULER_GAP } from '@constants/playground';
 
 const useStyles = createStyles(() => ({
   canvas: {
@@ -24,6 +27,7 @@ export default function GridLines({ numUnits, unitHeight, highlightColor }: Prop
   const { classes } = useStyles();
 
   const theme = useMantineTheme();
+  const denominator = useRecoilValue(denomState);
 
   const onDraw = React.useCallback(
     (context: CanvasRenderingContext2D, canvas: HTMLCanvasElement, scrollLeft: number) => {
@@ -46,7 +50,7 @@ export default function GridLines({ numUnits, unitHeight, highlightColor }: Prop
       }
 
       // Draw grid lines
-      const gap = 20;
+      const gap = RULER_GAP[denominator];
       const numLines = Math.ceil(canvas.clientWidth / gap) + 1;
 
       for (let i = 0; i < numLines; i += 1) {
@@ -63,7 +67,7 @@ export default function GridLines({ numUnits, unitHeight, highlightColor }: Prop
         // context.fillText(mark.toString(), x + 2, 12);
       }
     },
-    [highlightColor]
+    [highlightColor, denominator]
   );
 
   const canvasRef = useScrollLeftReactiveCanvas(onDraw);
