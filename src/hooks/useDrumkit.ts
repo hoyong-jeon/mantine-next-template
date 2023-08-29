@@ -5,15 +5,15 @@ import type { Instrument } from '@customTypes/editor';
 type Drum = Instrument;
 
 const DRUM_PATHS = [
-  '/sounds/kick.mp3',
-  '/sounds/snare.mp3',
-  '/sounds/hihat-closed.mp3',
-  '/sounds/hihat-open.mp3',
-  '/sounds/tom-low.mp3',
-  '/sounds/tom-mid.mp3',
-  '/sounds/tom-high.mp3',
-  '/sounds/clap.mp3',
-  '/sounds/ride.mp3',
+  '/sounds/rhythm/test/kick.mp3',
+  '/sounds/rhythm/test/snare.mp3',
+  '/sounds/rhythm/test/hihat-closed.mp3',
+  '/sounds/rhythm/test/hihat-open.mp3',
+  '/sounds/rhythm/test/tom-low.mp3',
+  '/sounds/rhythm/test/tom-mid.mp3',
+  '/sounds/rhythm/test/tom-high.mp3',
+  '/sounds/rhythm/test/clap.mp3',
+  '/sounds/rhythm/test/ride.mp3',
 ];
 
 function convertToPascalCase(input: string): string {

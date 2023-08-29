@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import {
   createStyles,
   ActionIcon,
@@ -16,11 +16,18 @@ import {
   IconPlayerPauseFilled,
   IconPlayerStopFilled,
 } from '@tabler/icons-react';
-import { useRecoilState, useRecoilValue } from 'recoil';
-import { playState, numerState, denomState, resolutionState, bpmState } from '@atoms/playground';
+import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
+import {
+  playState,
+  numerState,
+  denomState,
+  resolutionState,
+  bpmState,
+  scrollLeftState,
+} from '@atoms/playground';
 import Timer from './Timer';
-import { Denominators, Numerators, Resolutions } from '@constants/playground';
-import type { Denominator, Numerator, Resolution } from '@customTypes/playground';
+import { Denominators, Numerators } from '@constants/playground';
+import type { Denominator, Numerator } from '@customTypes/playground';
 import * as Tone from 'tone';
 
 const useStyles = createStyles((theme) => ({
@@ -39,18 +46,37 @@ const useStyles = createStyles((theme) => ({
   },
 }));
 
-interface Props {
-  onTogglePlay: () => void;
-  onStop: () => void;
-}
-
-export default function Bottom({ onTogglePlay, onStop }: Props) {
+export default function Bottom() {
   const { classes } = useStyles();
-  const play = useRecoilValue(playState);
 
   const [numer, setNumer] = useRecoilState(numerState);
   const [denom, setDenom] = useRecoilState(denomState);
   const [bpm, setBpm] = useRecoilState(bpmState);
+
+  const [isInitialized, setIsInitialized] = React.useState(false);
+  const [play, setPlay] = useRecoilState(playState);
+  const setScrollLeftState = useSetRecoilState(scrollLeftState);
+
+  const handleTogglePlay = () => {
+    if (!isInitialized) {
+      setIsInitialized(true);
+      Tone.start();
+    }
+
+    if (play === 'stopped' || play === 'paused') {
+      setPlay('playing');
+      Tone.Transport.start();
+    } else {
+      setPlay('paused');
+      Tone.Transport.pause();
+    }
+  };
+
+  const handleStop = () => {
+    setPlay('stopped');
+    setScrollLeftState(0);
+    Tone.Transport.stop();
+  };
 
   const handleChangeBpm = (v: number) => {
     Tone.Transport.bpm.value = v;
@@ -61,10 +87,16 @@ export default function Bottom({ onTogglePlay, onStop }: Props) {
     <div className={classes.bottom}>
       <Group>
         <div className={classes.controls}>
-          <ActionIcon onClick={onTogglePlay} variant="filled" radius="xl" color="teal.8" size="xl">
+          <ActionIcon
+            onClick={handleTogglePlay}
+            variant="filled"
+            radius="xl"
+            color="teal.8"
+            size="xl"
+          >
             {play !== 'playing' ? <IconPlayerPlayFilled /> : <IconPlayerPauseFilled />}
           </ActionIcon>
-          <ActionIcon onClick={onStop} variant="outline" radius="xl" color="gray.6" size="xl">
+          <ActionIcon onClick={handleStop} variant="outline" radius="xl" color="gray.6" size="xl">
             <IconPlayerStopFilled />
           </ActionIcon>
         </div>

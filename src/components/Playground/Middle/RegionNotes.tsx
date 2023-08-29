@@ -6,7 +6,7 @@ import { NOTE_WIDTH, STEP_WIDTH } from '@constants/playground';
 import { LayerType } from '@customTypes/editor';
 import { Synth, Player } from 'tone';
 import PlayerEvent from './PlayerEvent';
-import SynthEvent from './SynthEvent';
+import MelodyEvent from './MelodyEvent';
 import FlexNote from './FlexNote';
 
 const useStyles = createStyles(() => ({
@@ -27,7 +27,7 @@ interface Event {
   left: number;
   top: number;
   steps: number;
-  event: SynthEvent | PlayerEvent;
+  event: MelodyEvent | PlayerEvent;
 }
 
 interface Props {
@@ -73,7 +73,7 @@ export default function RegionNotes({ layerType, unitHeight, instruments }: Prop
         steps: STEP_WIDTH / STEP_WIDTH,
         event:
           layerType === 'melody'
-            ? new SynthEvent(inst.player, timelinePosition, {
+            ? new MelodyEvent(inst.player, timelinePosition, {
                 duration: STEP_WIDTH / STEP_WIDTH,
                 note: inst.name,
               })
@@ -98,7 +98,7 @@ export default function RegionNotes({ layerType, unitHeight, instruments }: Prop
       setEvents((prev) =>
         prev.map((e) => {
           if (e.id === id) {
-            if (e.event instanceof SynthEvent) {
+            if (e.event instanceof MelodyEvent) {
               e.event.update(inst.player as Synth, timelinePosition, {
                 duration: nextSteps,
                 note: inst.name,
