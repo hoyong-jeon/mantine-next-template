@@ -9,7 +9,6 @@ import {
   timeState,
   playState as playStateAtom,
   scrollLeftState,
-  resolutionState,
   bpmState,
   denomState,
   numerState,

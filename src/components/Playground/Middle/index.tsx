@@ -1,8 +1,17 @@
 import React from 'react';
-import { createStyles, Select, Slider, ThemeIcon, useMantineTheme } from '@mantine/core';
+import {
+  createStyles,
+  LoadingOverlay,
+  Select,
+  Slider,
+  ThemeIcon,
+  useMantineTheme,
+} from '@mantine/core';
 import SplitPane, { Pane } from 'split-pane-react';
 import { IconPiano } from '@tabler/icons-react';
 import { LayerType } from '@customTypes/editor';
+import useMelody from '@hooks/useMelody';
+import useDrumkit from '@hooks/useDrumkit';
 import MiddleHeader from './MiddleHeader';
 import CompositionFooter from './CompositionFooter';
 import Lane from './Lane';
@@ -49,14 +58,12 @@ const useStyles = createStyles((theme) => ({
   },
 }));
 
-interface Props {
-  piano: any[];
-  drumkit: any[];
-}
-
-export default function Middle({ piano, drumkit }: Props) {
+export default function Middle() {
   const { classes } = useStyles();
   const theme = useMantineTheme();
+
+  const { melody, isMelodyReady } = useMelody();
+  const { drumkit, isDrumkitReady } = useDrumkit();
 
   const LAYER_INFO: Record<LayerType, any> = {
     melody: {
@@ -70,6 +77,14 @@ export default function Middle({ piano, drumkit }: Props) {
 
   const [sizes, setSizes] = React.useState<(number | string)[]>(['50%', '50%']);
   const handleEqualizePane = () => setSizes(['50%', '50%']);
+
+  if (!isMelodyReady || !isDrumkitReady) {
+    return (
+      <div className={classes.mid}>
+        <LoadingOverlay visible />
+      </div>
+    );
+  }
 
   return (
     <div className={classes.mid}>
@@ -86,7 +101,7 @@ export default function Middle({ piano, drumkit }: Props) {
             className={classes.pane}
             style={{ background: '#ddd' }}
             minSize={100}
-            maxSize={140 + LAYER_INFO.melody.unitHeight * piano.length}
+            maxSize={140 + LAYER_INFO.melody.unitHeight * melody.length}
           >
             <div className={classes.side}>
               <div className={classes.instControls}>
@@ -126,7 +141,7 @@ export default function Middle({ piano, drumkit }: Props) {
             <Lane
               layerType="melody"
               highlightColor={LAYER_INFO.melody.highlightColor}
-              instruments={piano}
+              instruments={melody}
               unitHeight={LAYER_INFO.melody.unitHeight}
             />
           </Pane>

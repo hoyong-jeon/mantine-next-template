@@ -35,9 +35,15 @@ export default function useDrumkit() {
   const [isDrumkitReady, setIsDrumkitReady] = React.useState(false);
 
   React.useEffect(() => {
+    if (drumkitRef.current.length > 0) return;
     drumkitRef.current = DRUM_PATHS.map((path) => ({
       name: getPascalName(path),
-      player: new Player(path).toDestination(),
+      player: new Player({
+        url: path,
+        onload: () => {
+          setIsDrumkitReady(true);
+        },
+      }).toDestination(),
       playFn: () => {
         const target = drumkitRef.current.find(({ name }) => name === getPascalName(path));
         if (target) (target.player as Player).start();
@@ -48,12 +54,6 @@ export default function useDrumkit() {
       drumkitRef.current.forEach(({ player }) => (player as Player).dispose());
     };
   }, []);
-
-  React.useEffect(() => {
-    if (drumkitRef.current.length > 0) {
-      setIsDrumkitReady(true);
-    }
-  }, [drumkitRef.current]);
 
   return { drumkit: drumkitRef.current, isDrumkitReady };
 }
