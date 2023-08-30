@@ -4,8 +4,6 @@ import 'split-pane-react/esm/themes/default.css';
 import { createStyles } from '@mantine/core';
 import Playground from '@components/Playground';
 
-import useDrumkit from '@hooks/useDrumkit';
-
 const useStyles = createStyles(() => ({
   app: {
     height: '100vh',
@@ -16,8 +14,9 @@ const useStyles = createStyles(() => ({
 export default function HomePage() {
   const { classes } = useStyles();
 
-  const { drumkit, isDrumkitReady } = useDrumkit();
-  const isReady = isDrumkitReady;
-
-  return <div className={classes.app}>{isReady && <Playground drumkit={drumkit} />}</div>;
+  return (
+    <div className={classes.app}>
+      <Playground />
+    </div>
+  );
 }
