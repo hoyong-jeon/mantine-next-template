@@ -1,6 +1,6 @@
 import { ToneEvent, Synth, Time, Sampler } from 'tone';
 
-type MelodyInst = Synth | Sampler;
+export type MelodyInst = Synth | Sampler;
 
 interface Value {
   note: string;
@@ -36,6 +36,14 @@ export default class MelodyEvent {
     };
     this.event.value = value;
     this.event.start(startStep * Time('16n').toSeconds());
+  }
+
+  updateInstrument(instrument: MelodyInst) {
+    this.instrument = instrument;
+
+    this.event.callback = (time, v) => {
+      this.instrument.triggerAttackRelease(v.note, v.duration * Time('16n').toSeconds(), time);
+    };
   }
 
   delete() {

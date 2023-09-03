@@ -1,34 +1,16 @@
 import React from 'react';
-import {
-  createStyles,
-  ActionIcon,
-  Group,
-  NumberInput,
-  Menu,
-  UnstyledButton,
-  Slider,
-  Text,
-  Divider,
-  Select,
-} from '@mantine/core';
+import { createStyles, ActionIcon, Group, NumberInput, Text, Divider, Select } from '@mantine/core';
 import {
   IconPlayerPlayFilled,
   IconPlayerPauseFilled,
   IconPlayerStopFilled,
 } from '@tabler/icons-react';
-import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
-import {
-  playState,
-  numerState,
-  denomState,
-  resolutionState,
-  bpmState,
-  scrollLeftState,
-} from '@atoms/playground';
-import Timer from './Timer';
+import { useRecoilState, useSetRecoilState } from 'recoil';
+import { playState, numerState, denomState, bpmState, scrollLeftState } from '@atoms/playground';
 import { Denominators, Numerators } from '@constants/playground';
 import type { Denominator, Numerator } from '@customTypes/playground';
 import * as Tone from 'tone';
+import Timer from './Timer';
 
 const useStyles = createStyles((theme) => ({
   bottom: {

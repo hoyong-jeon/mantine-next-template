@@ -1,6 +1,6 @@
 import React from 'react';
 import { createStyles } from '@mantine/core';
-import { LayerType } from '@customTypes/editor';
+import { LayerType } from '@customTypes/playground';
 import { STEP_WIDTH, NOTE_HEAD_WIDTH } from '@constants/playground';
 import { resolutionState } from '@atoms/playground';
 import { useRecoilValue } from 'recoil';

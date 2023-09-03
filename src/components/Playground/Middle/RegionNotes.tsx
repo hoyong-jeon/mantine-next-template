@@ -2,11 +2,11 @@ import React from 'react';
 import { createStyles } from '@mantine/core';
 import { useRecoilValue } from 'recoil';
 import { scrollLeftState, resolutionState } from '@atoms/playground';
-import { NOTE_WIDTH, STEP_WIDTH } from '@constants/playground';
-import { LayerType } from '@customTypes/editor';
-import { Synth, Player } from 'tone';
+import { STEP_WIDTH } from '@constants/playground';
+import { LayerType } from '@customTypes/playground';
+import { Player } from 'tone';
 import PlayerEvent from './PlayerEvent';
-import MelodyEvent from './MelodyEvent';
+import MelodyEvent, { MelodyInst } from './MelodyEvent';
 import FlexNote from './FlexNote';
 
 const useStyles = createStyles(() => ({
@@ -99,7 +99,7 @@ export default function RegionNotes({ layerType, unitHeight, instruments }: Prop
         prev.map((e) => {
           if (e.id === id) {
             if (e.event instanceof MelodyEvent) {
-              e.event.update(inst.player as Synth, timelinePosition, {
+              e.event.update(inst.player as MelodyInst, timelinePosition, {
                 duration: nextSteps,
                 note: inst.name,
               });
@@ -162,6 +162,24 @@ export default function RegionNotes({ layerType, unitHeight, instruments }: Prop
       regionNotes.style.cursor = 'pointer';
     }
   }, [isDragging]);
+
+  React.useEffect(() => {
+    // update events instrument
+    setEvents((prev) =>
+      prev.map((e) => {
+        const pitchPosition = Math.floor(e.top / unitHeight);
+        const inst = instruments[pitchPosition];
+
+        if (e.event instanceof MelodyEvent) {
+          e.event.updateInstrument(inst.player as MelodyInst);
+        } else if (e.event instanceof PlayerEvent) {
+          // e.event.update(inst.player as Player, e.event.timelinePosition);
+        }
+
+        return e;
+      })
+    );
+  }, [instruments]);
 
   return (
     <div

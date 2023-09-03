@@ -1,6 +1,6 @@
 import React from 'react';
 import { createStyles, UnstyledButton } from '@mantine/core';
-import type { Instrument, LayerType } from '@customTypes/editor';
+import type { Instrument, LayerMeta } from '@customTypes/playground';
 import GridLines from './GridLines';
 import RegionNotes from './RegionNotes';
 
@@ -24,7 +24,7 @@ const useStyles = createStyles((theme, { numUnits, highlightColor, unitHeight }:
     height: '100%',
     overflowX: 'hidden',
     overflowY: 'scroll',
-    backgroundColor: theme.colors.gray[2],
+    backgroundColor: theme.colors.gray[0],
   },
   keysAndGrid: {
     position: 'absolute',
@@ -88,13 +88,12 @@ const useStyles = createStyles((theme, { numUnits, highlightColor, unitHeight }:
 }));
 
 interface Props {
-  layerType: LayerType;
+  layerMeta: LayerMeta;
   instruments: Instrument[];
-  unitHeight: number;
-  highlightColor?: string;
 }
 
-export default function Lane({ layerType, instruments, highlightColor, unitHeight }: Props) {
+export default function Lane({ layerMeta, instruments }: Props) {
+  const { highlightColor, unitHeight, layerType } = layerMeta;
   const numUnits = instruments.length;
 
   const { classes } = useStyles({
