@@ -4,8 +4,8 @@ import { useRecoilValue } from 'recoil';
 import { scrollLeftState, resolutionState } from '@atoms/playground';
 import { STEP_WIDTH } from '@constants/playground';
 import { LayerType } from '@customTypes/playground';
-import { Player } from 'tone';
-import PlayerEvent from './PlayerEvent';
+import { Sampler } from 'tone';
+import RhythmEvent from './RhythmEvent';
 import MelodyEvent, { MelodyInst } from './MelodyEvent';
 import FlexNote from './FlexNote';
 
@@ -27,7 +27,7 @@ interface Event {
   left: number;
   top: number;
   steps: number;
-  event: MelodyEvent | PlayerEvent;
+  event: MelodyEvent | RhythmEvent;
 }
 
 interface Props {
@@ -77,7 +77,7 @@ export default function RegionNotes({ layerType, unitHeight, instruments }: Prop
                 duration: STEP_WIDTH / STEP_WIDTH,
                 note: inst.name,
               })
-            : new PlayerEvent(inst.player, timelinePosition),
+            : new RhythmEvent(inst.player, timelinePosition, { note: inst.name }),
       };
 
       setEvents((prev) => [...prev, newEvent]);
@@ -103,8 +103,8 @@ export default function RegionNotes({ layerType, unitHeight, instruments }: Prop
                 duration: nextSteps,
                 note: inst.name,
               });
-            } else if (e.event instanceof PlayerEvent) {
-              e.event.update(inst.player as Player, timelinePosition);
+            } else if (e.event instanceof RhythmEvent) {
+              e.event.update(inst.player as Sampler, timelinePosition, { note: inst.name });
             }
 
             const nextEvent = {
@@ -172,7 +172,7 @@ export default function RegionNotes({ layerType, unitHeight, instruments }: Prop
 
         if (e.event instanceof MelodyEvent) {
           e.event.updateInstrument(inst.player as MelodyInst);
-        } else if (e.event instanceof PlayerEvent) {
+        } else if (e.event instanceof RhythmEvent) {
           // e.event.update(inst.player as Player, e.event.timelinePosition);
         }
 

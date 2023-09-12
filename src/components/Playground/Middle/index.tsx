@@ -2,6 +2,7 @@ import React from 'react';
 import { createStyles, LoadingOverlay } from '@mantine/core';
 import SplitPane, { Pane } from 'split-pane-react';
 import useMelodyLayer from '@hooks/useMelodyLayer';
+import useRhythmLayer from '@hooks/useRhythmLayer';
 import MiddleHeader from './MiddleHeader';
 import CompositionFooter from './CompositionFooter';
 import LayerPaneContent from './LayerPaneContent';
@@ -33,11 +34,12 @@ export default function Middle() {
   const { classes } = useStyles();
 
   const { melodyLayer, isMelodyLayerReady } = useMelodyLayer();
+  const { rhythmLayer, isRhythmLayerReady } = useRhythmLayer();
 
   const [sizes, setSizes] = React.useState<(number | string)[]>(['50%', '50%']);
   const handleEqualizePane = () => setSizes(['50%', '50%']);
 
-  if (melodyLayer === null || !isMelodyLayerReady) {
+  if (melodyLayer === null || !isMelodyLayerReady || rhythmLayer === null || !isRhythmLayerReady) {
     return (
       <div className={classes.mid}>
         <LoadingOverlay visible />
@@ -60,7 +62,7 @@ export default function Middle() {
             <LayerPaneContent layer={melodyLayer} />
           </Pane>
           <Pane className={classes.pane} minSize={100} maxSize={1000}>
-            <LayerPaneContent layer={melodyLayer} />
+            <LayerPaneContent layer={rhythmLayer} />
           </Pane>
         </SplitPane>
       </div>

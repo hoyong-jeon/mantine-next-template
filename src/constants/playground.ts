@@ -23,7 +23,7 @@ export const STEPS_PER_QUARTER = 4;
 export const TOTAL_WIDTH = NOTE_WIDTH['16n'] * 600; // 120000
 
 export const MELODY_KITS = ['piano', 'recorder'] as const;
-export const RHYTHM_KITS = ['drum'] as const;
+export const RHYTHM_KITS = ['basic', 'drum', 'gukak'] as const;
 
 export const KITS = [...MELODY_KITS, ...RHYTHM_KITS] as const;
 
@@ -31,4 +31,6 @@ export const KITS_MAP: Record<Kit, string> = {
   piano: '피아노',
   recorder: '리코더',
   drum: '드럼',
+  basic: '베이직',
+  gukak: '국악',
 } as const;
