@@ -1,6 +1,6 @@
 import React from 'react';
 import { createStyles, Select, Slider, ThemeIcon } from '@mantine/core';
-import { IconPiano } from '@tabler/icons-react';
+import { IconPiano, IconHeartbeat } from '@tabler/icons-react';
 import { Kit, Layer } from '@customTypes/playground';
 import { KITS_MAP, MELODY_KITS, RHYTHM_KITS } from '@constants/playground';
 import Lane from './Lane';
@@ -56,8 +56,13 @@ export default function LayerPaneContent({ layer }: Props) {
     <>
       <div className={classes.side}>
         <div className={classes.instControls}>
-          <ThemeIcon variant="light" radius="xl" size={50} color="teal">
-            <IconPiano />
+          <ThemeIcon
+            variant="light"
+            radius="xl"
+            size={50}
+            color={layerType === 'melody' ? 'teal' : 'cyan'}
+          >
+            {layerType === 'melody' ? <IconPiano size={30} /> : <IconHeartbeat size={30} />}
           </ThemeIcon>
           <div className={classes.instControlRight}>
             <Select
