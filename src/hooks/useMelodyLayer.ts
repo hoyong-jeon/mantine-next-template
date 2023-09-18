@@ -4,14 +4,7 @@ import { Sampler } from 'tone';
 import { useMantineTheme } from '@mantine/core';
 import { MELODY_KITS } from '@constants/playground';
 
-const cmajorC5toC3 = [
-  'C5',
-  'B4',
-  'A4',
-  'G4',
-  'F4',
-  'E4',
-  'D4',
+const cmajorC4toC2 = [
   'C4',
   'B3',
   'A3',
@@ -20,6 +13,13 @@ const cmajorC5toC3 = [
   'E3',
   'D3',
   'C3',
+  'B2',
+  'A2',
+  'G2',
+  'F2',
+  'E2',
+  'D2',
+  'C2',
 ];
 
 const basePath = '/sounds/melody/';
@@ -47,6 +47,13 @@ export default function useMelodyLayer(): {
       instKits: MELODY_KITS.reduce((acc, name) => {
         const sampler = new Sampler({
           urls: {
+            C4: `${basePath}${name}/C4.mp3`,
+            B3: `${basePath}${name}/B3.mp3`,
+            A3: `${basePath}${name}/A3.mp3`,
+            G3: `${basePath}${name}/G3.mp3`,
+            F3: `${basePath}${name}/F3.mp3`,
+            E3: `${basePath}${name}/E3.mp3`,
+            D3: `${basePath}${name}/D3.mp3`,
             C3: `${basePath}${name}/C3.mp3`,
             B2: `${basePath}${name}/B2.mp3`,
             A2: `${basePath}${name}/A2.mp3`,
@@ -54,6 +61,7 @@ export default function useMelodyLayer(): {
             F2: `${basePath}${name}/F2.mp3`,
             E2: `${basePath}${name}/E2.mp3`,
             D2: `${basePath}${name}/D2.mp3`,
+            C2: `${basePath}${name}/C2.mp3`,
           },
           release: 1,
         }).toDestination();
@@ -64,7 +72,7 @@ export default function useMelodyLayer(): {
 
         return {
           ...acc,
-          [name]: cmajorC5toC3.map((note) => ({
+          [name]: cmajorC4toC2.map((note) => ({
             name: note,
             player: sampler,
             playFn: genPlayFn(note),

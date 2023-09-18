@@ -1,6 +1,5 @@
-import { STEPS_PER_QUARTER, TOTAL_WIDTH } from '@constants/playground';
 import { Denominator, Numerator, Resolution } from '@customTypes/playground';
-import { atom, selector } from 'recoil';
+import { atom } from 'recoil';
 
 type PlayState = 'playing' | 'paused' | 'stopped';
 
@@ -26,7 +25,7 @@ export const bpmState = atom({
 
 export const resolutionState = atom<Resolution>({
   key: 'resolutionState',
-  default: '8n',
+  default: '16n',
 });
 
 export const numerState = atom<Numerator>({

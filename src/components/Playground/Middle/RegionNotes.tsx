@@ -2,7 +2,7 @@ import React from 'react';
 import { createStyles } from '@mantine/core';
 import { useRecoilValue } from 'recoil';
 import { scrollLeftState, resolutionState } from '@atoms/playground';
-import { STEP_WIDTH } from '@constants/playground';
+import { RHYTHM_DURATION, STEP_WIDTH } from '@constants/playground';
 import { LayerType } from '@customTypes/playground';
 import { Sampler } from 'tone';
 import RhythmEvent from './RhythmEvent';
@@ -77,7 +77,10 @@ export default function RegionNotes({ layerType, unitHeight, instruments }: Prop
                 duration: STEP_WIDTH / STEP_WIDTH,
                 note: inst.name,
               })
-            : new RhythmEvent(inst.player, timelinePosition, { note: inst.name }),
+            : new RhythmEvent(inst.player, timelinePosition, {
+                duration: RHYTHM_DURATION[resolution],
+                note: inst.name,
+              }),
       };
 
       setEvents((prev) => [...prev, newEvent]);
@@ -85,7 +88,7 @@ export default function RegionNotes({ layerType, unitHeight, instruments }: Prop
 
       // console.log(`timelinePosition: ${timelinePosition}, pitchPosition: ${pitchPosition}`);
     },
-    [scrollLeft, unitHeight, resolution]
+    [scrollLeft, unitHeight, resolution, instruments, layerType]
   );
 
   const handleEditNote = React.useCallback(
@@ -104,7 +107,10 @@ export default function RegionNotes({ layerType, unitHeight, instruments }: Prop
                 note: inst.name,
               });
             } else if (e.event instanceof RhythmEvent) {
-              e.event.update(inst.player as Sampler, timelinePosition, { note: inst.name });
+              e.event.update(inst.player as Sampler, timelinePosition, {
+                duration: RHYTHM_DURATION[resolution],
+                note: inst.name,
+              });
             }
 
             const nextEvent = {
@@ -120,7 +126,7 @@ export default function RegionNotes({ layerType, unitHeight, instruments }: Prop
         })
       );
     },
-    [resolution]
+    [resolution, scrollLeft, unitHeight, instruments]
   );
 
   const handleDeleteNote = React.useCallback(
@@ -173,7 +179,7 @@ export default function RegionNotes({ layerType, unitHeight, instruments }: Prop
         if (e.event instanceof MelodyEvent) {
           e.event.updateInstrument(inst.player as MelodyInst);
         } else if (e.event instanceof RhythmEvent) {
-          // e.event.update(inst.player as Player, e.event.timelinePosition);
+          e.event.updateInstrument(inst.player as Sampler);
         }
 
         return e;

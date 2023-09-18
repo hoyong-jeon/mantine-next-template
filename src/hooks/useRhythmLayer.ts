@@ -16,7 +16,7 @@ export default function useRhythmLayer(): {
 
   const RhythmLayerMeta = {
     layerType: 'rhythm' as const,
-    unitHeight: 30,
+    unitHeight: 50,
   };
 
   React.useEffect(() => {

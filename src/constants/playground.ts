@@ -17,6 +17,12 @@ export const RULER_GAP = {
   4: 80,
 } as const;
 
+export const RHYTHM_DURATION = {
+  '16n': 1,
+  '8n': 2,
+  '4n': 4,
+} as const;
+
 export const STEP_WIDTH = NOTE_WIDTH['16n'];
 export const STEPS_PER_QUARTER = 4;
 
