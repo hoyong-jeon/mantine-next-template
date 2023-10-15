@@ -239,7 +239,7 @@ export default function MiddleHeader({ onClickEqualizer }: Props) {
       <div className={classes.tracklistHeader}>
         <div className={classes.trackActivator}>
           <Button color="teal.5" compact>
-            멜로디
+            가락
           </Button>
         </div>
         <div className={classes.trackActivator}>

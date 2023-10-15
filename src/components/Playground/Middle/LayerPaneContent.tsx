@@ -1,9 +1,10 @@
 import React from 'react';
-import { createStyles, Select, Slider, ThemeIcon } from '@mantine/core';
+import { createStyles, Select, Slider, ThemeIcon, Divider } from '@mantine/core';
 import { IconPiano, IconHeartbeat } from '@tabler/icons-react';
 import { Kit, Layer } from '@customTypes/playground';
 import { KITS_MAP, MELODY_KITS, RHYTHM_KITS } from '@constants/playground';
 import Lane from './Lane';
+import NoteControls from './NoteControls';
 
 const useStyles = createStyles(() => ({
   pane: {
@@ -21,12 +22,19 @@ const useStyles = createStyles(() => ({
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'space-between',
+    marginBottom: 20,
   },
   instControlRight: {
     display: 'flex',
     flexDirection: 'column',
     gap: 10,
     width: 144,
+  },
+  noteControls: {
+    display: 'flex',
+    flexDirection: 'column',
+    gap: 10,
+    marginTop: 20,
   },
 }));
 
@@ -90,6 +98,12 @@ export default function LayerPaneContent({ layer }: Props) {
             <Slider size="xs" color={layerType === 'melody' ? 'teal' : 'cyan'} />
           </div>
         </div>
+        {layerType === 'melody' && (
+          <>
+            <Divider />
+            <NoteControls />
+          </>
+        )}
       </div>
       <Lane layerMeta={layerMeta} instruments={instKits[selectedKit]} />
     </>

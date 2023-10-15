@@ -1,4 +1,4 @@
-import { Denominator, Numerator, Resolution } from '@customTypes/playground';
+import { Denominator, Numerator, Octave, Resolution, ScaleName } from '@customTypes/playground';
 import { atom } from 'recoil';
 
 type PlayState = 'playing' | 'paused' | 'stopped';
@@ -36,4 +36,19 @@ export const numerState = atom<Numerator>({
 export const denomState = atom<Denominator>({
   key: 'denomState',
   default: '8',
+});
+
+export const octaveState = atom<[Octave, Octave]>({
+  key: 'octaveState',
+  default: ['3', '5'],
+});
+
+export const rootNoteState = atom({
+  key: 'rootNoteState',
+  default: 0,
+});
+
+export const scaleNameState = atom<ScaleName>({
+  key: 'scaleNameState',
+  default: 'major',
 });

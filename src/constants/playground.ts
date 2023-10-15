@@ -40,3 +40,16 @@ export const KITS_MAP: Record<Kit, string> = {
   basic: '베이직',
   gukak: '국악',
 } as const;
+
+export const SCALE_NAMES = ['major', 'minor'] as const;
+
+export const MAJOR_ROOT_NOTES = ['C', 'Db', 'D', 'Eb', 'E', 'F', 'F#', 'G', 'Ab', 'A', 'Bb', 'B'];
+
+export const MINOR_ROOT_NOTES = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'Bb', 'B'];
+
+export const ROOT_NOTES: Record<typeof SCALE_NAMES[number], string[]> = {
+  major: MAJOR_ROOT_NOTES,
+  minor: MINOR_ROOT_NOTES,
+} as const;
+
+export const OCTAVES = ['-1', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9'] as const;

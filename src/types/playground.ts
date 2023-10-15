@@ -1,4 +1,11 @@
-import { Denominators, Numerators, Resolutions, KITS } from '@constants/playground';
+import {
+  Denominators,
+  Numerators,
+  Resolutions,
+  KITS,
+  SCALE_NAMES,
+  OCTAVES,
+} from '@constants/playground';
 import * as Tone from 'tone';
 
 export interface Instrument {
@@ -25,3 +32,6 @@ export type Numerator = typeof Numerators[number];
 export type Denominator = typeof Denominators[number];
 
 export type Resolution = typeof Resolutions[number];
+
+export type ScaleName = typeof SCALE_NAMES[number];
+export type Octave = typeof OCTAVES[number];
