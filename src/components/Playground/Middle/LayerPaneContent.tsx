@@ -1,7 +1,7 @@
 import React from 'react';
 import { createStyles, Select, Slider, ThemeIcon, Divider } from '@mantine/core';
 import { IconPiano, IconHeartbeat } from '@tabler/icons-react';
-import { Kit, Layer } from '@customTypes/playground';
+import { KitName, Layer } from '@customTypes/playground';
 import { KITS_MAP, MELODY_KITS, RHYTHM_KITS } from '@constants/playground';
 import Lane from './Lane';
 import NoteControls from './NoteControls';
@@ -49,14 +49,14 @@ export default function LayerPaneContent({ layer }: Props) {
   const { layerType } = layerMeta;
   const defaultKit = layerType === 'melody' ? MELODY_KITS[0] : RHYTHM_KITS[0];
 
-  const [selectedKit, setSelectedKit] = React.useState<Kit>(defaultKit);
+  const [selectedKit, setSelectedKit] = React.useState<KitName>(defaultKit);
 
   const kitOptions = Object.keys(instKits).map((kit) => ({
     value: kit,
-    label: KITS_MAP[kit as Kit],
+    label: KITS_MAP[kit as KitName],
   }));
 
-  const handleSelectKit = (kit: Kit) => {
+  const handleSelectKit = (kit: KitName) => {
     setSelectedKit(kit);
   };
 
@@ -105,7 +105,7 @@ export default function LayerPaneContent({ layer }: Props) {
           </>
         )}
       </div>
-      <Lane layerMeta={layerMeta} instruments={instKits[selectedKit]} />
+      <Lane layerMeta={layerMeta} instrumentKit={instKits[selectedKit]} />
     </>
   );
 }

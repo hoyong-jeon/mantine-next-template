@@ -1,30 +1,28 @@
-import { ToneEvent, Synth, Time, Sampler } from 'tone';
-
-export type MelodyInst = Synth | Sampler;
+import { ToneEvent, Time } from 'tone';
+import MelodyInstrument from './MelodyInstrument';
 
 interface Value {
-  note: string;
   duration: number;
 }
 
 export default class MelodyEvent {
   event: ToneEvent;
-  instrument: MelodyInst;
+  instrument: MelodyInstrument;
 
-  constructor(instrument: MelodyInst, startStep: number, value: Value) {
+  constructor(instrument: MelodyInstrument, startStep: number, value: Value) {
     this.instrument = instrument;
     // console.log(this.instrument);
-    this.instrument.triggerAttackRelease(value.note, '16n');
+    this.instrument.playOnce();
 
     this.event = new ToneEvent<Value>();
     this.event.value = value;
     this.event.callback = (time, v) => {
-      this.instrument.triggerAttackRelease(v.note, v.duration * Time('16n').toSeconds(), time);
+      this.instrument.play(v.duration, time);
     };
     this.event.start(startStep * Time('16n').toSeconds());
   }
 
-  update(instrument: MelodyInst, startStep: number, value: Value) {
+  update(instrument: MelodyInstrument, startStep: number, value: Value) {
     this.instrument = instrument;
 
     this.event.dispose();
@@ -32,17 +30,17 @@ export default class MelodyEvent {
     this.event.value = value;
 
     this.event.callback = (time, v) => {
-      this.instrument.triggerAttackRelease(v.note, v.duration * Time('16n').toSeconds(), time);
+      this.instrument.play(v.duration, time);
     };
     this.event.value = value;
     this.event.start(startStep * Time('16n').toSeconds());
   }
 
-  updateInstrument(instrument: MelodyInst) {
+  updateInstrument(instrument: MelodyInstrument) {
     this.instrument = instrument;
 
     this.event.callback = (time, v) => {
-      this.instrument.triggerAttackRelease(v.note, v.duration * Time('16n').toSeconds(), time);
+      this.instrument.play(v.duration, time);
     };
   }
 

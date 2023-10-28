@@ -1,5 +1,6 @@
 import { Denominator, Numerator, Octave, Resolution, ScaleName } from '@customTypes/playground';
-import { atom } from 'recoil';
+import getScale from '@utils/getScale';
+import { atom, selector } from 'recoil';
 
 type PlayState = 'playing' | 'paused' | 'stopped';
 
@@ -51,4 +52,14 @@ export const rootNoteState = atom({
 export const scaleNameState = atom<ScaleName>({
   key: 'scaleNameState',
   default: 'major',
+});
+
+export const scaleState = selector({
+  key: 'scaleState',
+  get: ({ get }) => {
+    const rootNote = get(rootNoteState);
+    const scaleName = get(scaleNameState);
+
+    return getScale(rootNote, scaleName);
+  },
 });

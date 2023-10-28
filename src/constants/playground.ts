@@ -1,4 +1,4 @@
-import { Kit } from '@customTypes/playground';
+import { KitName } from '@customTypes/playground';
 
 export const Resolutions = ['16n', '8n', '4n'] as const;
 export const Numerators = ['6', '3'] as const;
@@ -33,7 +33,7 @@ export const RHYTHM_KITS = ['basic', 'drum', 'gukak'] as const;
 
 export const KITS = [...MELODY_KITS, ...RHYTHM_KITS] as const;
 
-export const KITS_MAP: Record<Kit, string> = {
+export const KITS_MAP: Record<KitName, string> = {
   piano: '피아노',
   recorder: '리코더',
   drum: '드럼',
@@ -53,3 +53,5 @@ export const ROOT_NOTES: Record<typeof SCALE_NAMES[number], string[]> = {
 } as const;
 
 export const OCTAVES = ['-1', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9'] as const;
+
+export const RHYTHM_SCALE = ['B1', 'A1', 'G1', 'F1', 'E1', 'D1', 'C1'] as const;

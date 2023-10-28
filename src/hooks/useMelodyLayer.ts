@@ -1,28 +1,31 @@
-import { InstKits, Layer } from '@customTypes/playground';
+import { InstKits, InstrumentKit, Layer } from '@customTypes/playground';
 import React from 'react';
-import { Sampler } from 'tone';
+import { Frequency, Sampler, SamplerOptions } from 'tone';
 import { useMantineTheme } from '@mantine/core';
 import { MELODY_KITS } from '@constants/playground';
+import MelodyInstrument from '@components/Playground/Middle/MelodyInstrument';
 
-const cmajorC4toC2 = [
-  'C4',
-  'B3',
-  'A3',
-  'G3',
-  'F3',
-  'E3',
-  'D3',
-  'C3',
-  'B2',
-  'A2',
-  'G2',
-  'F2',
-  'E2',
-  'D2',
-  'C2',
-];
-
-const basePath = '/sounds/melody/';
+const MelodyInstrumentOptions = (kitName: string): Partial<SamplerOptions> => ({
+  release: 1,
+  baseUrl: '/sounds/melody/',
+  urls: {
+    C4: `${kitName}/C4.mp3`,
+    B3: `${kitName}/B3.mp3`,
+    A3: `${kitName}/A3.mp3`,
+    G3: `${kitName}/G3.mp3`,
+    F3: `${kitName}/F3.mp3`,
+    E3: `${kitName}/E3.mp3`,
+    D3: `${kitName}/D3.mp3`,
+    C3: `${kitName}/C3.mp3`,
+    B2: `${kitName}/B2.mp3`,
+    A2: `${kitName}/A2.mp3`,
+    G2: `${kitName}/G2.mp3`,
+    F2: `${kitName}/F2.mp3`,
+    E2: `${kitName}/E2.mp3`,
+    D2: `${kitName}/D2.mp3`,
+    C2: `${kitName}/C2.mp3`,
+  },
+});
 
 export default function useMelodyLayer(): {
   melodyLayer: Layer | null;
@@ -45,57 +48,34 @@ export default function useMelodyLayer(): {
     melodyLayerRef.current = {
       layerMeta: MelodyLayerMeta,
       instKits: MELODY_KITS.reduce((acc, name) => {
-        const sampler = new Sampler({
-          urls: {
-            C4: `${basePath}${name}/C4.mp3`,
-            B3: `${basePath}${name}/B3.mp3`,
-            A3: `${basePath}${name}/A3.mp3`,
-            G3: `${basePath}${name}/G3.mp3`,
-            F3: `${basePath}${name}/F3.mp3`,
-            E3: `${basePath}${name}/E3.mp3`,
-            D3: `${basePath}${name}/D3.mp3`,
-            C3: `${basePath}${name}/C3.mp3`,
-            B2: `${basePath}${name}/B2.mp3`,
-            A2: `${basePath}${name}/A2.mp3`,
-            G2: `${basePath}${name}/G2.mp3`,
-            F2: `${basePath}${name}/F2.mp3`,
-            E2: `${basePath}${name}/E2.mp3`,
-            D2: `${basePath}${name}/D2.mp3`,
-            C2: `${basePath}${name}/C2.mp3`,
-          },
-          release: 1,
-        }).toDestination();
+        const startNote = Frequency('C2').toMidi(); // 36
+        const endNote = Frequency('B5').toMidi(); // 83
 
-        const genPlayFn = (note: string) => () => {
-          sampler.triggerAttackRelease(note, '16n');
-        };
+        const kit = Array.from({ length: endNote - startNote + 1 }).reduce((ac, _, i) => {
+          const note = Frequency(startNote + i, 'midi').toNote();
+          const inst = new MelodyInstrument(note, MelodyInstrumentOptions(name)).toDestination();
+          return { ...(ac as InstrumentKit), [note]: inst };
+        }, {} as InstrumentKit);
 
-        return {
-          ...acc,
-          [name]: cmajorC4toC2.map((note) => ({
-            name: note,
-            player: sampler,
-            playFn: genPlayFn(note),
-          })),
-        };
+        return { ...acc, [name]: kit } as InstKits;
       }, {} as InstKits),
     };
 
     setTimeout(() => {
       const { instKits } = melodyLayerRef.current!;
       const isReady = Object.values(instKits).every((kit) =>
-        kit.every(({ player }) => (player as Sampler).loaded)
+        Object.values(kit).every((inst) => (inst as MelodyInstrument).loaded)
       );
       setIsMelodyLayerReady(isReady);
-    }, 1000);
+    }, 5000);
 
     return () => {
       if (!melodyLayerRef.current) return;
       const { instKits } = melodyLayerRef.current;
 
       Object.values(instKits).forEach((kit) => {
-        kit.forEach(({ player }) => {
-          (player as Sampler).dispose();
+        Object.values(kit).forEach((inst) => {
+          (inst as MelodyInstrument).dispose();
         });
       });
     };

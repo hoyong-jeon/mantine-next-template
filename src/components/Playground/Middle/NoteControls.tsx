@@ -17,11 +17,11 @@ const useStyles = createStyles(() => ({
 export default function NoteControls() {
   const { classes } = useStyles();
 
-  const [octave, setOctave] = useRecoilState(octaveState);
+  // const [octave, setOctave] = useRecoilState(octaveState);
   const [rootNote, setRootNote] = useRecoilState(rootNoteState);
   const [scaleName, setScaleName] = useRecoilState(scaleNameState);
 
-  const octaveMarks = OCTAVES.map((v) => ({ value: Number(v) * 10 + 10, label: v }));
+  // const octaveMarks = OCTAVES.map((v) => ({ value: Number(v) * 10 + 10, label: v }));
   const scaleOptions = SCALE_NAMES.map((v) => ({ value: v, label: v }));
   const rootOptions = React.useMemo(
     () =>
@@ -32,16 +32,16 @@ export default function NoteControls() {
     [scaleName]
   );
 
-  const octaveValue = React.useMemo(
-    () => octave.map((v) => Number(v) * 10 + 10) as [number, number],
-    [octave]
-  );
+  // const octaveValue = React.useMemo(
+  //   () => octave.map((v) => Number(v) * 10 + 10) as [number, number],
+  //   [octave]
+  // );
 
-  const handleChangeOctave = (value: number[]) => {
-    const from = (value[0] / 10 - 1).toString() as Octave;
-    const to = (value[1] / 10 - 1).toString() as Octave;
-    setOctave([from, to]);
-  };
+  // const handleChangeOctave = (value: number[]) => {
+  //   const from = (value[0] / 10 - 1).toString() as Octave;
+  //   const to = (value[1] / 10 - 1).toString() as Octave;
+  //   setOctave([from, to]);
+  // };
 
   const handleSelectRoot = (value: string) => {
     setRootNote(Number(value));
@@ -53,7 +53,7 @@ export default function NoteControls() {
 
   return (
     <div className={classes.noteControls}>
-      <Grid align="center" justify="space-between">
+      {/* <Grid align="center" justify="space-between">
         <Grid.Col span={2}>
           <Text size="xs">octave</Text>
         </Grid.Col>
@@ -72,7 +72,7 @@ export default function NoteControls() {
             onChange={handleChangeOctave}
           />
         </Grid.Col>
-      </Grid>
+      </Grid> */}
       <Grid align="center" justify="space-between">
         <Grid.Col span={2}>
           <Text size="xs">root</Text>

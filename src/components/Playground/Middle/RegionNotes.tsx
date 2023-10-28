@@ -1,13 +1,15 @@
 import React from 'react';
 import { createStyles } from '@mantine/core';
 import { useRecoilValue } from 'recoil';
-import { scrollLeftState, resolutionState } from '@atoms/playground';
-import { RHYTHM_DURATION, STEP_WIDTH } from '@constants/playground';
-import { LayerType } from '@customTypes/playground';
-import { Sampler } from 'tone';
+import { scrollLeftState, resolutionState, scaleState } from '@atoms/playground';
+import { RHYTHM_DURATION, RHYTHM_SCALE, STEP_WIDTH } from '@constants/playground';
+import { InstrumentKit, LayerType, Note } from '@customTypes/playground';
+import { Frequency, Sampler } from 'tone';
 import RhythmEvent from './RhythmEvent';
-import MelodyEvent, { MelodyInst } from './MelodyEvent';
+import MelodyEvent from './MelodyEvent';
 import FlexNote from './FlexNote';
+import MelodyInstrument from './MelodyInstrument';
+import RhythmInstrument from './RhythmInstrument';
 
 const useStyles = createStyles(() => ({
   regionNotes: {
@@ -33,13 +35,18 @@ interface Event {
 interface Props {
   layerType: LayerType;
   unitHeight: number;
-  instruments: any[];
+  instrumentKit: InstrumentKit;
 }
 
-export default function RegionNotes({ layerType, unitHeight, instruments }: Props) {
+export default function RegionNotes({ layerType, unitHeight, instrumentKit }: Props) {
   const { classes } = useStyles();
   const scrollLeft = useRecoilValue(scrollLeftState);
   const resolution = useRecoilValue(resolutionState);
+
+  const melodyScale = useRecoilValue(scaleState);
+  const rhythmScale = RHYTHM_SCALE;
+
+  const scale = layerType === 'melody' ? melodyScale : rhythmScale;
 
   //   const [coords, setCoords] = React.useState<{ x: number; y: number }[]>([]);
   const [events, setEvents] = React.useState<Event[]>([]);
@@ -64,7 +71,10 @@ export default function RegionNotes({ layerType, unitHeight, instruments }: Prop
 
       const snapLeft = timelinePosition * STEP_WIDTH;
       const snapTop = pitchPosition * unitHeight;
-      const inst = instruments[pitchPosition];
+
+      const toMidi = Frequency(scale[pitchPosition] as Note).toMidi();
+      const midiToNote = Frequency(toMidi, 'midi').toNote();
+      const inst = instrumentKit[midiToNote as Note];
 
       const newEvent: Event = {
         id: `${layerType}-${noteIdRef.current}`,
@@ -73,13 +83,11 @@ export default function RegionNotes({ layerType, unitHeight, instruments }: Prop
         steps: STEP_WIDTH / STEP_WIDTH,
         event:
           layerType === 'melody'
-            ? new MelodyEvent(inst.player, timelinePosition, {
+            ? new MelodyEvent(inst, timelinePosition, {
                 duration: STEP_WIDTH / STEP_WIDTH,
-                note: inst.name,
               })
-            : new RhythmEvent(inst.player, timelinePosition, {
+            : new RhythmEvent(inst, timelinePosition, {
                 duration: RHYTHM_DURATION[resolution],
-                note: inst.name,
               }),
       };
 
@@ -88,7 +96,7 @@ export default function RegionNotes({ layerType, unitHeight, instruments }: Prop
 
       // console.log(`timelinePosition: ${timelinePosition}, pitchPosition: ${pitchPosition}`);
     },
-    [scrollLeft, unitHeight, resolution, instruments, layerType]
+    [scrollLeft, unitHeight, resolution, instrumentKit, layerType, scale]
   );
 
   const handleEditNote = React.useCallback(
@@ -96,20 +104,21 @@ export default function RegionNotes({ layerType, unitHeight, instruments }: Prop
       const absoluteLeft = nextLeft + scrollLeft;
       const timelinePosition = Math.floor(absoluteLeft / STEP_WIDTH);
       const pitchPosition = Math.floor(nextTop / unitHeight);
-      const inst = instruments[pitchPosition];
+
+      const toMidi = Frequency(scale[pitchPosition] as Note).toMidi();
+      const midiToNote = Frequency(toMidi, 'midi').toNote();
+      const inst = instrumentKit[midiToNote as Note];
 
       setEvents((prev) =>
         prev.map((e) => {
           if (e.id === id) {
             if (e.event instanceof MelodyEvent) {
-              e.event.update(inst.player as MelodyInst, timelinePosition, {
+              e.event.update(inst as MelodyInstrument, timelinePosition, {
                 duration: nextSteps,
-                note: inst.name,
               });
             } else if (e.event instanceof RhythmEvent) {
-              e.event.update(inst.player as Sampler, timelinePosition, {
+              e.event.update(inst as RhythmInstrument, timelinePosition, {
                 duration: RHYTHM_DURATION[resolution],
-                note: inst.name,
               });
             }
 
@@ -126,7 +135,7 @@ export default function RegionNotes({ layerType, unitHeight, instruments }: Prop
         })
       );
     },
-    [resolution, scrollLeft, unitHeight, instruments]
+    [resolution, scrollLeft, unitHeight, instrumentKit, scale]
   );
 
   const handleDeleteNote = React.useCallback(
@@ -174,18 +183,21 @@ export default function RegionNotes({ layerType, unitHeight, instruments }: Prop
     setEvents((prev) =>
       prev.map((e) => {
         const pitchPosition = Math.floor(e.top / unitHeight);
-        const inst = instruments[pitchPosition];
+
+        const toMidi = Frequency(scale[pitchPosition] as Note).toMidi();
+        const midiToNote = Frequency(toMidi, 'midi').toNote();
+        const inst = instrumentKit[midiToNote as Note];
 
         if (e.event instanceof MelodyEvent) {
-          e.event.updateInstrument(inst.player as MelodyInst);
+          e.event.updateInstrument(inst as MelodyInstrument);
         } else if (e.event instanceof RhythmEvent) {
-          e.event.updateInstrument(inst.player as Sampler);
+          e.event.updateInstrument(inst as RhythmInstrument);
         }
 
         return e;
       })
     );
-  }, [instruments]);
+  }, [instrumentKit, scale, unitHeight]);
 
   return (
     <div

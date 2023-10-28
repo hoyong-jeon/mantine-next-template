@@ -1,8 +1,12 @@
 import React from 'react';
 import { createStyles, UnstyledButton } from '@mantine/core';
-import type { Instrument, LayerMeta } from '@customTypes/playground';
+import type { Instrument, InstrumentKit, LayerMeta, Note } from '@customTypes/playground';
 import GridLines from './GridLines';
 import RegionNotes from './RegionNotes';
+import { useRecoilState, useRecoilValue } from 'recoil';
+import { scaleState } from '@atoms/playground';
+import { RHYTHM_SCALE } from '@constants/playground';
+import { Frequency } from 'tone';
 
 interface StylesProps {
   highlightColor?: string;
@@ -89,12 +93,17 @@ const useStyles = createStyles((theme, { numUnits, highlightColor, unitHeight }:
 
 interface Props {
   layerMeta: LayerMeta;
-  instruments: Instrument[];
+  instrumentKit: InstrumentKit;
 }
 
-export default function Lane({ layerMeta, instruments }: Props) {
+export default function Lane({ layerMeta, instrumentKit }: Props) {
   const { highlightColor, unitHeight, layerType } = layerMeta;
-  const numUnits = instruments.length;
+
+  const melodyScale = useRecoilValue(scaleState);
+  const rhythmScale = RHYTHM_SCALE;
+
+  const scale = layerMeta.layerType === 'melody' ? melodyScale : rhythmScale;
+  const numUnits = layerMeta.layerType === 'melody' ? melodyScale.length : rhythmScale.length;
 
   const { classes } = useStyles({
     numUnits,
@@ -108,24 +117,33 @@ export default function Lane({ layerMeta, instruments }: Props) {
         <div className={classes.keysAndGrid}>
           <div className={classes.keysWrapper}>
             <div className={classes.keys}>
-              {instruments.map((instrument) => (
+              {scale.map((note) => (
                 <UnstyledButton
-                  key={instrument.name}
+                  key={note}
                   className={classes.key}
-                  onClick={instrument.playFn}
+                  onClick={() => {
+                    const toMidi = Frequency(note as Note).toMidi();
+                    const midiToNote = Frequency(toMidi, 'midi').toNote();
+                    const inst = instrumentKit[midiToNote as Note];
+                    inst.playOnce();
+                  }}
                 >
-                  {instrument.name}
+                  {note}
                 </UnstyledButton>
               ))}
             </div>
           </div>
           <div className={classes.grid}>
             <GridLines
-              numUnits={instruments.length}
+              numUnits={numUnits}
               unitHeight={unitHeight}
               highlightColor={highlightColor}
             />
-            <RegionNotes instruments={instruments} layerType={layerType} unitHeight={unitHeight} />
+            <RegionNotes
+              instrumentKit={instrumentKit}
+              layerType={layerType}
+              unitHeight={unitHeight}
+            />
           </div>
         </div>
       </div>

@@ -1,11 +1,22 @@
 import { InstKits, Layer } from '@customTypes/playground';
 import React from 'react';
-import { Sampler } from 'tone';
-import { RHYTHM_KITS } from '@constants/playground';
+import { Sampler, SamplerOptions } from 'tone';
+import { RHYTHM_KITS, RHYTHM_SCALE } from '@constants/playground';
+import RhythmInstrument from '@components/Playground/Middle/RhythmInstrument';
 
-const rhythmInstNames = ['B1', 'A1', 'G1', 'F1', 'E1', 'D1', 'C1'];
-
-const basePath = '/sounds/rhythm/';
+const RhythmInstrumentOptions = (kitName: string): Partial<SamplerOptions> => ({
+  release: 1,
+  baseUrl: '/sounds/rhythm/',
+  urls: {
+    C1: `${kitName}/C1.mp3`,
+    D1: `${kitName}/D1.mp3`,
+    E1: `${kitName}/E1.mp3`,
+    F1: `${kitName}/F1.mp3`,
+    G1: `${kitName}/G1.mp3`,
+    A1: `${kitName}/A1.mp3`,
+    B1: `${kitName}/B1.mp3`,
+  },
+});
 
 export default function useRhythmLayer(): {
   rhythmLayer: Layer | null;
@@ -25,49 +36,32 @@ export default function useRhythmLayer(): {
     rhythmLayerRef.current = {
       layerMeta: RhythmLayerMeta,
       instKits: RHYTHM_KITS.reduce((acc, name) => {
-        const sampler = new Sampler({
-          urls: {
-            C1: `${basePath}${name}/C1.mp3`,
-            D1: `${basePath}${name}/D1.mp3`,
-            E1: `${basePath}${name}/E1.mp3`,
-            F1: `${basePath}${name}/F1.mp3`,
-            G1: `${basePath}${name}/G1.mp3`,
-            A1: `${basePath}${name}/A1.mp3`,
-            B1: `${basePath}${name}/B1.mp3`,
-          },
-          release: 1,
-        }).toDestination();
+        const kit = RHYTHM_SCALE.reduce((ac, note) => {
+          const inst = new RhythmInstrument(note, RhythmInstrumentOptions(name)).toDestination();
+          return { ...(ac as InstKits), [note]: inst };
+        }, {} as InstKits);
 
-        const genPlayFn = (note: string) => () => {
-          sampler.triggerAttackRelease(note, '16n');
-        };
-
-        return {
-          ...acc,
-          [name]: rhythmInstNames.map((note) => ({
-            name: note,
-            player: sampler,
-            playFn: genPlayFn(note),
-          })),
-        };
+        return { ...acc, [name]: kit } as InstKits;
       }, {} as InstKits),
     };
 
     setTimeout(() => {
       const { instKits } = rhythmLayerRef.current!;
-      const isReady = Object.values(instKits).every((kit) =>
-        kit.every(({ player }) => (player as Sampler).loaded)
-      );
+      const isReady = Object.values(instKits).every((kit) => {
+        return Object.values(kit).every((inst) => {
+          return (inst as RhythmInstrument).loaded;
+        });
+      });
       setIsRhythmLayerReady(isReady);
-    }, 1000);
+    }, 5000);
 
     return () => {
       if (!rhythmLayerRef.current) return;
       const { instKits } = rhythmLayerRef.current;
 
       Object.values(instKits).forEach((kit) => {
-        kit.forEach(({ player }) => {
-          (player as Sampler).dispose();
+        Object.values(kit).forEach((inst) => {
+          (inst as RhythmInstrument).dispose();
         });
       });
     };
