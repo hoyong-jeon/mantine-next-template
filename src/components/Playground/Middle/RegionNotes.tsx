@@ -4,12 +4,12 @@ import { useRecoilValue } from 'recoil';
 import { scrollLeftState, resolutionState, scaleState } from '@atoms/playground';
 import { RHYTHM_DURATION, RHYTHM_SCALE, STEP_WIDTH } from '@constants/playground';
 import { InstrumentKit, LayerType, Note } from '@customTypes/playground';
-import { Frequency, Sampler } from 'tone';
-import RhythmEvent from './RhythmEvent';
-import MelodyEvent from './MelodyEvent';
+import { Frequency } from 'tone';
+import RhythmEvent from './rhythm/RhythmEvent';
+import MelodyEvent from './melody/MelodyEvent';
 import FlexNote from './FlexNote';
-import MelodyInstrument from './MelodyInstrument';
-import RhythmInstrument from './RhythmInstrument';
+import MelodyInstrument from './melody/MelodyInstrument';
+import RhythmInstrument from './rhythm/RhythmInstrument';
 
 const useStyles = createStyles(() => ({
   regionNotes: {

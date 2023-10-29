@@ -1,5 +1,5 @@
-import MelodyInstrument from '@components/Playground/Middle/MelodyInstrument';
-import RhythmInstrument from '@components/Playground/Middle/RhythmInstrument';
+import MelodyInstrument from '@components/Playground/Middle/melody/MelodyInstrument';
+import RhythmInstrument from '@components/Playground/Middle/rhythm/RhythmInstrument';
 import {
   Denominators,
   Numerators,

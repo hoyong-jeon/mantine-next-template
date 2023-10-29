@@ -1,12 +1,12 @@
 import React from 'react';
 import { createStyles, UnstyledButton } from '@mantine/core';
-import type { Instrument, InstrumentKit, LayerMeta, Note } from '@customTypes/playground';
-import GridLines from './GridLines';
-import RegionNotes from './RegionNotes';
-import { useRecoilState, useRecoilValue } from 'recoil';
+import type { InstrumentKit, LayerMeta, Note } from '@customTypes/playground';
+import { useRecoilValue } from 'recoil';
 import { scaleState } from '@atoms/playground';
 import { RHYTHM_SCALE } from '@constants/playground';
 import { Frequency } from 'tone';
+import RegionNotes from './RegionNotes';
+import GridLines from './GridLines';
 
 interface StylesProps {
   highlightColor?: string;

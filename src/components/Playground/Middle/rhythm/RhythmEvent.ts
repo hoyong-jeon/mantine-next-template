@@ -1,28 +1,28 @@
-import { ToneEvent, Synth, Time } from 'tone';
+import { ToneEvent, Time } from 'tone';
+import RhythmInstrument from './RhythmInstrument';
 
 interface Value {
-  note: string;
   duration: number;
 }
 
-export default class SynthEvent {
+export default class RhythmEvent {
   event: ToneEvent;
-  instrument: Synth;
+  instrument: RhythmInstrument;
 
-  constructor(instrument: Synth, startStep: number, value: Value) {
+  constructor(instrument: RhythmInstrument, startStep: number, value: Value) {
     this.instrument = instrument;
     // console.log(this.instrument);
-    this.instrument.triggerAttackRelease(value.note, '16n');
+    this.instrument.playOnce();
 
     this.event = new ToneEvent<Value>();
     this.event.value = value;
     this.event.callback = (time, v) => {
-      this.instrument.triggerAttackRelease(v.note, v.duration * Time('16n').toSeconds(), time);
+      this.instrument.play(v.duration, time);
     };
     this.event.start(startStep * Time('16n').toSeconds());
   }
 
-  update(instrument: Synth, startStep: number, value: Value) {
+  update(instrument: RhythmInstrument, startStep: number, value: Value) {
     this.instrument = instrument;
 
     this.event.dispose();
@@ -30,10 +30,18 @@ export default class SynthEvent {
     this.event.value = value;
 
     this.event.callback = (time, v) => {
-      this.instrument.triggerAttackRelease(v.note, v.duration * Time('16n').toSeconds(), time);
+      this.instrument.play(v.duration, time);
     };
     this.event.value = value;
     this.event.start(startStep * Time('16n').toSeconds());
+  }
+
+  updateInstrument(instrument: RhythmInstrument) {
+    this.instrument = instrument;
+
+    this.event.callback = (time, v) => {
+      this.instrument.play(v.duration, time);
+    };
   }
 
   delete() {

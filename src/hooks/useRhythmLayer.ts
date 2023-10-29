@@ -1,8 +1,8 @@
 import { InstKits, Layer } from '@customTypes/playground';
 import React from 'react';
-import { Sampler, SamplerOptions } from 'tone';
+import { SamplerOptions } from 'tone';
 import { RHYTHM_KITS, RHYTHM_SCALE } from '@constants/playground';
-import RhythmInstrument from '@components/Playground/Middle/RhythmInstrument';
+import RhythmInstrument from '@components/Playground/Middle/rhythm/RhythmInstrument';
 
 const RhythmInstrumentOptions = (kitName: string): Partial<SamplerOptions> => ({
   release: 1,
@@ -47,13 +47,11 @@ export default function useRhythmLayer(): {
 
     setTimeout(() => {
       const { instKits } = rhythmLayerRef.current!;
-      const isReady = Object.values(instKits).every((kit) => {
-        return Object.values(kit).every((inst) => {
-          return (inst as RhythmInstrument).loaded;
-        });
-      });
+      const isReady = Object.values(instKits).every((kit) =>
+        Object.values(kit).every((inst) => (inst as RhythmInstrument).loaded)
+      );
       setIsRhythmLayerReady(isReady);
-    }, 5000);
+    }, 10000);
 
     return () => {
       if (!rhythmLayerRef.current) return;

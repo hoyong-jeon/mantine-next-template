@@ -1,9 +1,9 @@
 import { InstKits, InstrumentKit, Layer } from '@customTypes/playground';
 import React from 'react';
-import { Frequency, Sampler, SamplerOptions } from 'tone';
+import { Frequency, SamplerOptions } from 'tone';
 import { useMantineTheme } from '@mantine/core';
 import { MELODY_KITS } from '@constants/playground';
-import MelodyInstrument from '@components/Playground/Middle/MelodyInstrument';
+import MelodyInstrument from '@components/Playground/Middle/melody/MelodyInstrument';
 
 const MelodyInstrumentOptions = (kitName: string): Partial<SamplerOptions> => ({
   release: 1,
@@ -67,7 +67,7 @@ export default function useMelodyLayer(): {
         Object.values(kit).every((inst) => (inst as MelodyInstrument).loaded)
       );
       setIsMelodyLayerReady(isReady);
-    }, 5000);
+    }, 10000);
 
     return () => {
       if (!melodyLayerRef.current) return;

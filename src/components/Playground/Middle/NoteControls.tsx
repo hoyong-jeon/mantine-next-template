@@ -1,9 +1,9 @@
 import React from 'react';
-import { createStyles, Select, Text, Grid, RangeSlider } from '@mantine/core';
-import { OCTAVES, ROOT_NOTES, SCALE_NAMES } from '@constants/playground';
+import { createStyles, Select, Text, Grid } from '@mantine/core';
+import { ROOT_NOTES, SCALE_NAMES } from '@constants/playground';
 import { useRecoilState } from 'recoil';
-import { octaveState, rootNoteState, scaleNameState } from '@atoms/playground';
-import { Octave, ScaleName } from '@customTypes/playground';
+import { rootNoteState, scaleNameState } from '@atoms/playground';
+import { ScaleName } from '@customTypes/playground';
 
 const useStyles = createStyles(() => ({
   noteControls: {
