@@ -8,7 +8,6 @@ import {
   SCALE_NAMES,
   OCTAVES,
 } from '@constants/playground';
-import * as Tone from 'tone';
 
 export type Instrument = RhythmInstrument | MelodyInstrument;
 export type InstrumentKit = Record<Note, Instrument>;

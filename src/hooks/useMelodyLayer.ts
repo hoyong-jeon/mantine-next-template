@@ -67,7 +67,7 @@ export default function useMelodyLayer(): {
         Object.values(kit).every((inst) => (inst as MelodyInstrument).loaded)
       );
       setIsMelodyLayerReady(isReady);
-    }, 10000);
+    }, 3000);
 
     return () => {
       if (!melodyLayerRef.current) return;

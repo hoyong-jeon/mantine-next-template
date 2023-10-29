@@ -41,7 +41,7 @@ export default function useRhythmLayer(): {
           return { ...(ac as InstKits), [note]: inst };
         }, {} as InstKits);
 
-        return { ...acc, [name]: kit } as InstKits;
+        return { ...acc, [name]: kit } as unknown as InstKits;
       }, {} as InstKits),
     };
 
@@ -51,7 +51,7 @@ export default function useRhythmLayer(): {
         Object.values(kit).every((inst) => (inst as RhythmInstrument).loaded)
       );
       setIsRhythmLayerReady(isReady);
-    }, 10000);
+    }, 3000);
 
     return () => {
       if (!rhythmLayerRef.current) return;
