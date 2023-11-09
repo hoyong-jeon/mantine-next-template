@@ -61,13 +61,18 @@ export default function useMelodyLayer(): {
       }, {} as InstKits),
     };
 
-    setTimeout(() => {
-      const { instKits } = melodyLayerRef.current!;
+    // continuously check if all instruments are loaded, and set isMelodyLayerReady. if so, clear interval
+    const checkIfReady = setInterval(() => {
+      if (!melodyLayerRef.current) return;
+      const { instKits } = melodyLayerRef.current;
       const isReady = Object.values(instKits).every((kit) =>
         Object.values(kit).every((inst) => (inst as MelodyInstrument).loaded)
       );
-      setIsMelodyLayerReady(isReady);
-    }, 3000);
+      if (isReady) {
+        setIsMelodyLayerReady(true);
+        clearInterval(checkIfReady);
+      }
+    }, 100);
 
     return () => {
       if (!melodyLayerRef.current) return;

@@ -45,13 +45,19 @@ export default function useRhythmLayer(): {
       }, {} as InstKits),
     };
 
-    setTimeout(() => {
-      const { instKits } = rhythmLayerRef.current!;
+    // continuously check if all instruments are loaded, and set isRhythmLayerReady. if so, clear interval
+
+    const checkIfReady = setInterval(() => {
+      if (!rhythmLayerRef.current) return;
+      const { instKits } = rhythmLayerRef.current;
       const isReady = Object.values(instKits).every((kit) =>
         Object.values(kit).every((inst) => (inst as RhythmInstrument).loaded)
       );
-      setIsRhythmLayerReady(isReady);
-    }, 3000);
+      if (isReady) {
+        setIsRhythmLayerReady(true);
+        clearInterval(checkIfReady);
+      }
+    }, 100);
 
     return () => {
       if (!rhythmLayerRef.current) return;
